@@ -32,6 +32,7 @@ def author():
                 <a href="/web">web</a>
             </body>
         </html>"""
+
 @app.route('/lab1/image')
 def image ():
     path = url_for("static", filename="mili.jpg")
@@ -67,9 +68,20 @@ def counter():
         Дата и время : ''' + str(time) + '''<br>
         Запрошенный адрес: ''' + url + '''<br>
         Ваш IP-адресс: ''' + client_ip + '''<br>
+        <hr>
+        <a href="/counter/reset">Очистка счётчика</a>
     </body>
 </html>
 '''
+
+visit_count = 0
+
+@app.route('/counter/reset')
+def reset_counter():
+    global count
+    count = 0
+    return redirect("/counter")
+
 @app.route("/info")
 def info():
     return redirect("/author")
