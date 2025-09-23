@@ -1,10 +1,26 @@
+from collections import deque
 from flask import Flask, url_for, request, redirect
 import datetime
 app = Flask(__name__)
 
+visit_log = []
+
 @app.errorhandler(404)
 def not_found(err):
+    
+    client_ip = request.remote_addr
+    access_time = datetime.datetime.today()
+    requested_url = request.url
+
+    visit_log.append(f'[<i>{access_time}</i>, пользователь <i>{client_ip}</i>] зашёл на адрес: <i>{requested_url}</i>')
     img_path = url_for("static", filename="kotic.jpg")
+
+    log_html = "<ul style='list-style:none; padding:0;'>"
+    for entry in visit_log:
+        log_html += f"<li style='margin:5px 0; padding:10px; background:#eee; border-radius:6px;'>{entry}</li>"
+    log_html += "</ul>"
+
+
     return '''
 <!doctype html>
 <html>
@@ -18,18 +34,17 @@ def not_found(err):
                 color: #D3D3D3;
                 text-align: center;
                 position: relative;
-                overflow: hidden;
+                
                 display:flex;
                 min-height: 100vh;
             }
-            div {
-            z-index: -1;
-            position: absolute;
-            }
             h1 {
             position: absolute;
-            font-size: 70px;
-            left: 50%;
+            font-size: 50px;
+            top: -220%;
+            
+
+
             }
             h1:hover {
             color: red;
@@ -37,17 +52,39 @@ def not_found(err):
             a {
             color: gray;
             }
+            .book {
+            color: gray;
+            width: 800px;
+            }
+            .place {
+            color: white;
+            position: absolute;
+            left: 50%;
+            top: 40%;
+            h2 {
+            color: white;}
 
-         
+        
         </style>
     </head>
     <body>
-        <h1> WARNING <br> 404 <br> NO PAGE FOUND </h1>
-        <a href="/">Вернуться в безопасное место</a>
+        <div class='place'>
+            <h1> WARNING <br> 404 <br> NO PAGE FOUND </h1>
+            <a href="/">Вернуться в безопасное место</a>
+            <p>Твой IP: ''' + client_ip + '''</p>
+            <p>Дата и время: ''' + str(access_time) + '''</p>
+            <p>Запрошенный адрес: ''' + requested_url + '''</p>
+        </div>
         <div>
         <img src="''' + img_path + '''">
         <div>
+        <div class='book'>
+        <h2>Журнал ошибок 404</h2>
+        ''' + log_html + '''
+        </div>
+ 
         
+    </div>
     </body>
 </html>
 ''', 404
