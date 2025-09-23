@@ -6,6 +6,82 @@ app = Flask(__name__)
 def not_found(err):
     return "нет такой страницы", 404
 
+@app.route("/bad_request")
+def bad_request():
+    return '''
+<!doctype html>
+<html>
+    <body style="font-family:monospace; font-weight: bold; background-color:#7B68EE; font-size: 2em; color: white">
+        <h1>Error 400 <br> (Недопустимый запрос)!!</h1>
+    </body>
+</html>
+''', 400
+
+
+@app.route("/unauthorized")
+def unauthorized():
+    return '''
+<!doctype html>
+<html>
+    <body style="text-align:center; background-color:red; color: black; font-size: 2em">
+        <h1>401 — Unauthorized</h1>
+        <p><i>Эта страница только для избранных</i></p>
+    </body>
+</html>
+''', 401
+
+
+@app.route("/payment_required")
+def payment_required():
+    return '''
+<!doctype html>
+<html>
+    <body style="margin:40px; font-family: franklin gothic medium; background-color:black; color: red">
+        <h1 style="padding:20px;">402 — Payment Required</h1>
+        <p>Пожалуйста заплатите деньгами или отправьте на номер 5Rywgdv%sugdhbcs</p>
+    </body>
+</html>
+''', 402
+
+
+@app.route("/forbidden")
+def forbidden():
+    return '''
+<!doctype html>
+<html>
+    <body style="text-align: center; margin-top:300px; font-family: century schoolbook; background-color:#191970; color: #FFE4E1">
+        <h1>403 — Forbidden</h1>
+        <p>Недостаточный уровень доступа</p>
+    </body>
+</html>
+''', 403
+
+
+@app.route("/method_not_allowed")
+def method_not_allowed():
+    return '''
+<!doctype html>
+<html>
+    <body style="text-align: center; margin: 40px; margin-top:150px; font-family: matura mt script capitals; background-color: #8FBC8F; color: #800000">
+        <h1>405 — Method Not Allowed</h1>
+        <p>Метод запроса не разрешён для данного ресурса</p>
+    </body>
+</html>
+''', 405
+
+@app.route("/teapot")
+def teapot():
+    return '''
+<!doctype html>
+<html>
+    <body style="text-align: center; font-family: mv boli; background-color: #556B2F; font-size: 2em; color: #F0FFF0">
+        <h1>418 <br> I'm a teapot</h1>
+    </body>
+</html>
+''', 418
+
+
+
 @app.route("/")
 @app.route("/index")
 def index():
