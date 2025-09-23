@@ -213,7 +213,11 @@ def image ():
         <img src="''' + path + '''" class="cat-image">
     </body>
 </html>
-'''
+''', 200, {
+    'Content-Language': 'ru',
+    'Cat-Breed': 'bengal',
+    'Cat-Age': '2 years'
+}
 
 count = 0
 
