@@ -1,0 +1,15 @@
+body {
+    text-align: center; 
+    background-color: #8B0000;
+}
+h1 {
+    color:white;
+    font-size: 2.5em;
+    margin-bottom: 10px;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+    margin: -25pt;
+    padding-top: 40px;
+}
+.cat-image {
+    -webkit-mask-image: radial-gradient(circle, black 45%, transparent 60%);
+}
