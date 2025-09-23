@@ -146,7 +146,7 @@ def internal_error(err):
             • Наши инженеры-котики уже работают над решением<br>
             • Попробуйте обновить страницу через несколько минут
     </div>
-    </body>
+</body>
 <html>
 ''', 500
 @app.route("/")
@@ -178,8 +178,7 @@ def web():
                <h1>web-сервер на flask</h1>
                <a href="/lab1/author">author</a>
            </body>
-        </html>""", 200, {"X-Server": "sample", 
-                          "Content-Type": "text/plain; charset=utf-8"
+        </html>""", 200, {"X-Server": "sample"
                           }
 
 @app.route("/lab1/author")
@@ -286,6 +285,53 @@ def lab1():
         зовые возможности.
         </p>
         <a href='/'>Вернуться на главную страницу</a>
+        <h2>Список роутов</h2>
+        <ul>
+            <li>
+                <a href="/lab1/web">Web-сервер на Flask</a>
+            </li>
+            <li>
+                <a href="/lab1/image">Картинка</a>
+            </li>
+            <li>
+                <a href="/lab1/author">Автор</a>
+            </li>
+            <li>
+                <a href="/lab1/counter">Счётчик</a>
+            </li>
+            <li>
+                <a href="/lab1/counter/reset">Обнуление</a>
+            </li>
+            <li>
+                <a href='/lab1/info'>Перенаправление</a>
+            </li>
+            <li>
+                <a href='/lab1/created'>Код ответа 201</a>
+            </li>
+            <li>
+                <a href='/bad_request'>Ошибка 400</a>
+            </li>
+            <li>
+                <a href='/unauthorized'>Ошибка 401</a>
+            </li>
+            <li>
+                <a href='/payment_required'>Ошибка 402</a>
+            </li>
+            <li>
+                <a href='/forbidden'>Ошибка 403</a>
+            </li>
+            <li>
+                <a href='/lab1/not_found'>Ошибка 404</a>
+            </li>
+            <li>
+                <a href='/method_not_allowed'>Ошибка 405</a>
+            </li>
+            <li>
+                <a href='/teapot'>Ошибка 418</a>
+            </li>
+            <li>
+                <a href='/break-server'>Ошибка 500</a>
+            </li>
     </body>
 <html>
 '''
