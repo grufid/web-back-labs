@@ -36,7 +36,6 @@ def not_found(err):
             }
             a {
             color: gray;
-
             }
 
          
@@ -127,8 +126,29 @@ def teapot():
 </html>
 ''', 418
 
+@app.route("/break-server")
+def break_server(): 
+    my_list = [1, 2, 3] # Выход за границы списка
+    return my_list[10]  
 
-
+@app.errorhandler(500)
+def internal_error(err):
+    return '''
+<!doctype html>
+<html>
+<body>
+    <h1>500</h1>
+    <h2>Внутрення ошибка сервера</h2>
+    <p>Кажется, наш сервер захотел немного отдохнуть</p>
+    <div>
+        <strong>Что случилось:</strong><br>
+            • Сервер столкнулся с непредвиденной ошибкой<br>
+            • Наши инженеры-котики уже работают над решением<br>
+            • Попробуйте обновить страницу через несколько минут
+    </div>
+    </body>
+<html>
+''', 500
 @app.route("/")
 @app.route("/index")
 def index():
