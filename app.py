@@ -5,6 +5,28 @@ app = Flask(__name__)
 @app.errorhandler(404)
 def not_found(err):
     return "нет такой страницы", 404
+
+@app.route("/")
+@app.route("/index")
+def index():
+    return '''
+<!doctype html>
+<html>
+    <body>
+        <header>
+            НГТУ, ФБ, WEB-программирование, часть 2. Список лабораторных
+        </header>
+        <main>
+        <a href="/lab1">Первая лабораторная</a>
+        </main>
+        <footer>
+            Шамшиева Даяна Артуровна, ФБИ-32, 3 курс, 2025
+        </footer>
+    <body>
+<html>
+'''
+
+
 @app.route("/lab1/web")
 def web():
     return """<!doctype html>
@@ -42,8 +64,9 @@ def image ():
 <html>
     <head>
         <link rel="stylesheet" href="''' + css_path + '''">
+    </head>
     <body>
-        <h1> (=^‥^=) котик (=^‥^=)</h1>
+        <h1> (=^‥^=) котик (=^‥^=)'</h1>
         <img src="''' + path + '''" class="cat-image">
     </body>
 </html>
