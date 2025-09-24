@@ -249,7 +249,7 @@ def image ():
     </body>
 </html>
 ''', 200, {
-    'Content-Language': 'ru',
+    'Content-Language': 'en',
     'Cat-Breed': 'bengal',
     'Cat-Age': '2 years'
 }
@@ -406,4 +406,7 @@ def add_flower(name):
 @app.route('/lab2/example/')
 def example():
     name = "Даяна Шамшиева"
-    return render_template('example.html', name=name)
+    number = "2"
+    group = "32"
+    course = "3"
+    return render_template('example.html', name=name, number=number, group=group, course=course)
