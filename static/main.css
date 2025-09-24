@@ -1,0 +1,63 @@
+body {
+    background-color:rgba(84, 61, 32, 0.641);
+    color:rgb(123, 68, 104);
+    font-family: 'Times New Roman', Times, serif;
+    margin: 0px;
+}
+main {
+    color:rgba(23, 15, 3, 0.888);
+    font-family: 'Times New Roman', Times, serif;
+    margin: 10px 20px 30px;
+}
+a {
+    text-decoration: none;
+    color:rgb(225, 187, 159);
+    transition: 1s 2s;
+}
+a:link {
+    text-decoration: underline;
+    color:rgb(185, 24, 24);
+}
+a:visited {
+    color:rgb(208, 185, 38);
+}
+a:hover {
+    text-decoration: underline;
+    color:rgb(233, 168, 142);
+    transition: 0.3s;
+}
+a:active {
+    color: black;
+    opacity: 0.4;
+}
+div.menu {
+    border: 7px solid rgba(179, 115, 51, 0.56);
+    border-radius: 5px;
+    width: 300px;
+    margin: 0 auto;
+}
+div.menu:hover {
+    background-color:rgba(35, 21, 3, 0.749);
+    box-shadow: 0 0 15px rgba(145, 77, 5, 0.595);
+    transition: 0.7s;
+}
+header {
+    background-color:rgb(73, 20, 6);
+    color:rgb(215, 215, 185, 0.888);
+    font-family: 'Times New Roman', Times, serif;
+    margin: 0px;
+    padding: 10px;
+}
+footer {
+    background-color:rgb(73, 20, 6);
+    color:rgba(251, 221, 182, 0.888);
+    font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    margin: 0px;
+    padding: 5px;
+    font-style: italic;
+    position: fixed;
+    text-align: right;
+    bottom: 0;
+    right: 0;
+    left: 0;
+}
