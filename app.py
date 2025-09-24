@@ -403,6 +403,7 @@ def add_flower(name):
 </html>
 '''
 
-@app.route('/lab2/example')
+@app.route('/lab2/example/')
 def example():
-    return render_template('example.html')
+    name = "Даяна Шамшиева"
+    return render_template('example.html', name=name)
