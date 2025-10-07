@@ -196,7 +196,13 @@ def index():
             НГТУ, ФБ, WEB-программирование, часть 2. Список лабораторных
         </header>
         <main>
-        <a href="/lab1">Первая лабораторная</a>
+        <ol>
+            <li>
+                <a href="/lab1">Лабораторная I</a>
+            </li>
+            <li>
+                <a href="/lab2">Лабораторная II</a>
+            </li>
         </main>
         <footer>
             Шамшиева Даяна Артуровна, ФБИ-32, 3 курс, 2025
@@ -382,6 +388,21 @@ def a2 ():
 
 flower_list = ['роза', 'тюльпан', 'незабудка', 'ромашка']
 
+@app.route('/lab2/flowers/all')
+def all_flowers():
+    return f'''
+<!doctype html>
+<html>
+    <body>
+        <p>Количество цветов: {len(flower_list)}</p>
+        <p>Список цветов:</p>
+        <ul>
+            {''.join(f'<li>{flower}</li>' for flower in flower_list)}
+        </ul>
+        <a href="/lab2/clean_flower">Очистить список цветов</a>
+    </body>
+</html>
+'''
 @app.route('/lab2/flowers/<int:flower_id>')
 def flowers(flower_id):
     if flower_id >= len(flower_list):
@@ -415,21 +436,7 @@ def add_flower_error():
 </html>
 ''', 400
 
-@app.route('/lab2/flowers/all')
-def all_flowers():
-    return f'''
-<!doctype html>
-<html>
-    <body>
-        <p>Количество цветов: {len(flower_list)}</p>
-        <p>Список цветов:</p>
-        <ul>
-            {''.join(f'<li>{flower}</li>' for flower in flower_list)}
-        </ul>
-        <a href="/lab2/clean_flower">Очистить список цветов</a>
-    </body>
-</html>
-'''
+
 
 @app.route('/lab2/clean_flower')
 def f_cleaner():
