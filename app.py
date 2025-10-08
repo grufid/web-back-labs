@@ -41,8 +41,6 @@ def not_found(err):
             position: absolute;
             font-size: 50px;
             top: -220%;
-            
-
 
             }
             h1:hover {
@@ -57,7 +55,7 @@ def not_found(err):
             }
             .place {
             color: white;
-            position: absolute;
+            position: fixed;
             left: 50%;
             top: 40%;
             h2 {
@@ -386,44 +384,46 @@ def a ():
 def a2 ():
     return 'со слэшем'
 
-flower_list = ['роза', 'тюльпан', 'незабудка', 'ромашка']
+flower_list = [
+    {'name': 'роза', 'price': 300},
+    {'name': 'тюльпан', 'price': 310},
+    {'name': 'незабудка', 'price': 320},
+    {'name': 'ромашка', 'price': 330},
+    {'name': 'георгин', 'price': 300},
+    {'name': 'гладиолус', 'price': 310}
+]
 
-@app.route('/lab2/flowers/all')
+@app.route('/lab2/all_flowers')
 def all_flowers():
-    return f'''
-<!doctype html>
-<html>
-    <body>
-        <p>Количество цветов: {len(flower_list)}</p>
-        <p>Список цветов:</p>
-        <ul>
-            {''.join(f'<li>{flower}</li>' for flower in flower_list)}
-        </ul>
-        <a href="/lab2/clean_flower">Очистить список цветов</a>
-    </body>
-</html>
-'''
+     return render_template('all_flowers.html', flowers=flower_list)
+
 @app.route('/lab2/flowers/<int:flower_id>')
 def flowers(flower_id):
-    if flower_id >= len(flower_list):
+    if flower_id < 0 or flower_id >= len(flower_list):
         abort(404)
-    else:
-        flower = flower_list[flower_id] 
-        all_flowers_url = url_for('all_flowers')
-        return render_template('flowers.html', flower_id=flower_id, flower=flower,
-        all_flowers_url=all_flowers_url)
+    flower = flower_list[flower_id]
+    return render_template('flower_detail.html', flower=flower, flower_id=flower_id)
 
 @app.route('/lab2/add_flower/<name>')
 def add_flower(name):
-        flower_list.append(name)
-        return f'''
-        <h1>Добавлен новый цветок</h1>
-        <p>Название нового цветка: {name}</p>
-        <p>Всего цветов: {len(flower_list)}</p>
-        <a href="/lab2/flowers/all">Полный список</a>
-    </body>
-</html>
-'''
+        flower_list.append({'name': name, 'price': 0})
+        return render_template('all_flowers.html', 
+                          name=name, 
+                          price=0,
+                          count=len(flower_list),
+                          flowers=flower_list)
+
+@app.route("/lab2/add_flower", methods=['POST'])
+def add_flower_post():
+    name = request.form.get('name')
+    price = request.form.get('price')
+    if name and price:
+        flower_list.append({'name': name, 'price': int(price)})
+        return redirect(url_for('all_flowers'))
+    else:
+        return render_template('error.html', message="Не указано имя или цена цветка"), 400
+
+    
 
 @app.route('/lab2/add_flower/')
 def add_flower_error():
@@ -436,7 +436,17 @@ def add_flower_error():
 </html>
 ''', 400
 
+@app.route("/lab2/del_flower/<int:flower_id>")
+def delete_flower(flower_id):
+    if flower_id < 0 or flower_id >= len(flower_list):
+        abort(404)
+    flower_list.pop(flower_id)
+    return redirect(url_for('all_flowers'))
 
+@app.route("/lab2/delete_all")
+def delete_all_flowers():
+    flower_list.clear()
+    return redirect(url_for('all_flowers'))
 
 @app.route('/lab2/clean_flower')
 def f_cleaner():
@@ -447,7 +457,7 @@ def f_cleaner():
 <html>
     <body>
         <p>Список цветов очищен</p>
-        <a href="/lab2/flowers/all">К списку цветов</a>
+        <a href="/lab2/all_flowers">К списку цветов</a>
     </body>
 </html>
 '''
