@@ -65,3 +65,31 @@ footer {
     color: rgb(255, 181, 181);
     font-weight: bold;
 }
+
+#success {
+        font-size: 25px;
+        color: #820c0c;
+        font-weight: bold;
+}
+
+.price {
+    color: #950000;
+    font-weight: bold;
+}
+label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+}
+#re {
+    margin: 5px;
+    font-size: larger;
+}
+input[type="radio"],
+input[type="checkbox"] {
+    margin-right: 10px;
+}
+input[type="text"] {
+    margin: 5px;
+    padding: 10px;
+}
