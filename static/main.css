@@ -61,3 +61,7 @@ footer {
     right: 0;
     left: 0;
 }
+.error {
+    color: rgb(255, 181, 181);
+    font-weight: bold;
+}
