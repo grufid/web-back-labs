@@ -1,12 +1,14 @@
 from flask import Flask, url_for, request, redirect, abort, render_template
 from lab1 import lab1
 from lab2 import lab2
+from lab3 import lab3
 
 import datetime
 
 app = Flask(__name__)
 app.register_blueprint(lab1)
 app.register_blueprint(lab2)
+app.register_blueprint(lab3)
 
 
 visit_log = []
@@ -207,6 +209,9 @@ def index():
             </li>
             <li>
                 <a href="/lab2">Лабораторная II</a>
+            </li>
+            <li>
+                <a href="/lab3">Лабораторная III</a>
             </li>
         </main>
         <footer>
