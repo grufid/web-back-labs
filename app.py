@@ -21,7 +21,7 @@ def not_found(err):
     requested_url = request.url
 
     visit_log.append(f'[<i>{access_time}</i>, пользователь <i>{client_ip}</i>] зашёл на адрес: <i>{requested_url}</i>')
-    img_path = url_for("static", filename="kotic.jpg")
+    img_path = url_for("static", filename="lab1/kotic.jpg")
 
     log_html = "<ul style='list-style:none; padding:0;'>"
     for entry in visit_log:

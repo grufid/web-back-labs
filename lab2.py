@@ -23,19 +23,19 @@ flower_list = [
 
 @lab2.route('/lab2/all_flowers')
 def all_flowers():
-     return render_template('all_flowers.html', flowers=flower_list)
+     return render_template('lab2/all_flowers.html', flowers=flower_list)
 
 @lab2.route('/lab2/flowers/<int:flower_id>')
 def flowers(flower_id):
     if flower_id < 0 or flower_id >= len(flower_list):
         abort(404)
     flower = flower_list[flower_id]
-    return render_template('flower_detail.html', flower=flower, flower_id=flower_id)
+    return render_template('lab2/flower_detail.html', flower=flower, flower_id=flower_id)
 
 @lab2.route('/lab2/add_flower/<name>')
 def add_flower(name):
         flower_list.lab2end({'name': name, 'price': 0})
-        return render_template('lab2.all_flowers.html', 
+        return render_template('lab2/all_flowers.html', 
                           name=name, 
                           price=0,
                           count=len(flower_list),
@@ -46,10 +46,10 @@ def add_flower_post():
     name = request.form.get('name')
     price = request.form.get('price')
     if name and price:
-        flower_list.lab2end({'name': name, 'price': int(price)})
+        flower_list.append({'name': name, 'price': int(price)})
         return redirect(url_for('lab2.all_flowers'))
     else:
-        return render_template('error.html', message="Не указано имя или цена цветка"), 400
+        return render_template('lab2/error.html', message="Не указано имя или цена цветка"), 400
 
     
 
@@ -103,17 +103,17 @@ def example():
         {'name': 'мандарины', 'price': 95},
         {'name': 'манго', 'price': 321}
     ]
-    return render_template('example.html', 
+    return render_template('lab2/example.html', 
                            name=name, number=number, group=group,
                            course=course, fruits=fruits)
 @lab2.route('/lab2/')
 def lab():
-    return render_template('lab2.html')
+    return render_template('lab2/lab2.html')
 
 @lab2.route('/lab2/filters')
 def filters():
     phrase = "О <b>сколько</b> <u>нам</U> <i>открытий</i> чудных... "
-    return render_template('filter.html', phrase = phrase)
+    return render_template('lab2/filter.html', phrase = phrase)
 
 
 @lab2.route('/lab2/calc/')
@@ -164,108 +164,108 @@ books = [
 @lab2.route('/lab2/books/')
 def books_list():
     """Обработчик для вывода списка книг"""
-    return render_template('books.html', books=books)
+    return render_template('lab2/books.html', books=books)
 
 
 dogs = [
     {
         'name': 'Золотистый ретривер',
-        'image': 'golden_retriever.jpg',
+        'image': 'lab2/golden_retriever.jpg',
         'description': 'Дружелюбная, умная и преданная собака с золотистой шерстью'
     },
     {
         'name': 'Корги',
-        'image': 'corgi.jpg',
+        'image': 'lab2/corgi.jpg',
         'description': 'Маленькая собака с короткими лапками и большой улыбкой'
     },
     {
         'name': 'Сибирский хаски',
-        'image': 'husky.jpg',
+        'image': 'lab2/husky.jpg',
         'description': 'Энергичная собака с голубыми глазами и волчьей внешностью'
     },
     {
         'name': 'Померанский шпиц',
-        'image': 'pomeranian.jpg',
+        'image': 'lab2/pomeranian.jpg',
         'description': 'Маленький пушистый комочек с весёлым характером'
     },
     {
         'name': 'Самоед',
-        'image': 'samoyed.jpg',
+        'image': 'lab2/samoyed.jpg',
         'description': 'Белая пушистая собака с постоянной улыбкой'
     },
     {
         'name': 'Бигль',
-        'image': 'beagle.jpg',
+        'image': 'lab2/beagle.jpg',
         'description': 'Дружелюбная гончая с грустными глазами и висячими ушками'
     },
     {
         'name': 'Французский бульдог',
-        'image': 'french_bulldog.jpg',
+        'image': 'lab2/french_bulldog.jpg',
         'description': 'Компактная собака с большими ушами и забавной мордочкой'
     },
     {
         'name': 'Кавалер кинг чарльз спаниель',
-        'image': 'cavalier.jpg',
+        'image': 'lab2/cavalier.jpg',
         'description': 'Элегантная маленькая собака с шелковистой шерстью'
     },
     {
         'name': 'Ши-тцу',
-        'image': 'shih_tzu.jpg',
+        'image': 'lab2/shih_tzu.jpg',
         'description': 'Длинношёрстная собака с милой мордочкой и дружелюбным нравом'
     },
     {
         'name': 'Мопс',
-        'image': 'pug.jpg',
+        'image': 'lab2/pug.jpg',
         'description': 'Небольшая собака с морщинистой мордочкой и весёлым характером'
     },
     {
         'name': 'Австралийская овчарка',
-        'image': 'australian_shepherd.jpg',
+        'image': 'lab2/australian_shepherd.jpg',
         'description': 'Умная и активная собака с разными цветами глаз'
     },
     {
         'name': 'Бернский зенненхунд',
-        'image': 'bernese.jpg',
+        'image': 'lab2/bernese.jpg',
         'description': 'Крупная пушистая собака с трёхцветным окрасом'
     },
     {
         'name': 'Такса',
-        'image': 'dachshund.jpg',
+        'image': 'lab2/dachshund.jpg',
         'description': 'Длинная собака с короткими лапками и смелым характером'
     },
     {
         'name': 'Лабрадор ретривер',
-        'image': 'labrador.jpg',
+        'image': 'lab2/labrador.jpg',
         'description': 'Самая популярная порода - добрая, умная и игривая'
     },
     {
         'name': 'Акита-ину',
-        'image': 'akita.jpg',
+        'image': 'lab2/akita.jpg',
         'description': 'Японская порода с плюшевой шерстью и преданным характером'
     },
     {
         'name': 'Кокер-спаниель',
-        'image': 'cocker_spaniel.jpg',
+        'image': 'lab2/cocker_spaniel.jpg',
         'description': 'Собака с длинными ушами и шелковистой шерстью'
     },
     {
         'name': 'Бишон фризе',
-        'image': 'bichon.jpg',
+        'image': 'lab2/bichon.jpg',
         'description': 'Белая пушистая собака, похожая на мягкую игрушку'
     },
     {
         'name': 'Далматин',
-        'image': 'dalmatian.jpg',
+        'image': 'lab2/dalmatian.jpg',
         'description': 'Узнаваемая порода с чёрными пятнами на белой шерсти'
     },
     {
         'name': 'Пудель',
-        'image': 'poodle.jpg',
+        'image': 'lab2/poodle.jpg',
         'description': 'Умная собака с кудрявой шерстью и элегантной внешностью'
     },
     {
         'name': 'Аляскинский маламут',
-        'image': 'malamute.jpg',
+        'image': 'lab2/malamute.jpg',
         'description': 'Крупная ездовая собака с густой шерстью и дружелюбным нравом'
     }
 ]
@@ -273,4 +273,4 @@ dogs = [
 @lab2.route('/lab2/dogs')
 def dogs_list():
     f'''Обработчик для вывода списка собак'''
-    return render_template('dogs.html', dogs=dogs)
+    return render_template('lab2/dogs.html', dogs=dogs)
