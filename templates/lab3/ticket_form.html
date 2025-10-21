@@ -1,0 +1,121 @@
+{% extends "base.html" %} 
+
+{% block lab %}Лабораторная работа 3 - Железнодорожный билет{% endblock %}
+
+{% block main %}
+    <h1>Оформление железнодорожного билета</h1>
+
+    {% if errors %}
+        <div class="error-list" style="color: red; background: #ffe6e6; padding: 15px; border-radius: 5px; margin-bottom: 20px;">
+            <h3>Ошибки заполнения формы:</h3>
+            <ul>
+                {% for error in errors %}
+                <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+    {% endif %}
+
+    <!-- method не указан - по умолчанию GET -->
+    <form>
+        <div class="form-group">
+            <label for="fio">ФИО пассажира:</label>
+            <input type="text" id="fio" name="fio" value="{{ fio or '' }}" required>
+        </div>
+
+        <div class="form-group">
+            <label>Полка:</label>
+            <div>
+                <label><input type="radio" name="shelf" value="нижняя" {{ 'checked' if shelf == 'нижняя' }} required> Нижняя</label>
+                <label><input type="radio" name="shelf" value="верхняя" {{ 'checked' if shelf == 'верхняя' }}> Верхняя</label>
+                <label><input type="radio" name="shelf" value="нижняя боковая" {{ 'checked' if shelf == 'нижняя боковая' }}> Нижняя боковая</label>
+                <label><input type="radio" name="shelf" value="верхняя боковая" {{ 'checked' if shelf == 'верхняя боковая' }}> Верхняя боковая</label>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>
+                <input type="checkbox" name="bedding" {{ 'checked' if bedding }}> 
+                С бельём
+            </label>
+        </div>
+
+        <div class="form-group">
+            <label>
+                <input type="checkbox" name="baggage" {{ 'checked' if baggage }}> 
+                С багажом
+            </label>
+        </div>
+
+        <div class="form-group">
+            <label for="age">Возраст:</label>
+            <input type="number" id="age" name="age" value="{{ age or '' }}" min="1" max="120" required>
+        </div>
+
+        <div class="form-group">
+            <label for="departure">Пункт выезда:</label>
+            <input type="text" id="departure" name="departure" value="{{ departure or '' }}" required>
+        </div>
+
+        <div class="form-group">
+            <label for="destination">Пункт назначения:</label>
+            <input type="text" id="destination" name="destination" value="{{ destination or '' }}" required>
+        </div>
+
+        <div class="form-group">
+            <label for="date">Дата поездки:</label>
+            <input type="date" id="date" name="date" value="{{ date or '' }}" required>
+        </div>
+
+        <div class="form-group">
+            <label>
+                <input type="checkbox" name="insurance" {{ 'checked' if insurance }}> 
+                Нужна страховка
+            </label>
+        </div>
+
+        <div class="form-group">
+            <button type="submit">Оформить билет</button>
+            <button type="reset">Очистить форму</button>
+        </div>
+    </form>
+
+    <div style="margin-top: 20px;">
+        <a href="/lab3/">Вернуться к лабораторной работе 3</a>
+    </div>
+
+    <style>
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        
+        input[type="text"],
+        input[type="number"],
+        input[type="date"] {
+            width: 300px;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        
+        button {
+            padding: 10px 20px;
+            margin-right: 10px;
+            background: #3498db;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        button:hover {
+            background: #2980b9;
+        }
+    </style>
+{% endblock %}

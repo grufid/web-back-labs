@@ -95,3 +95,88 @@ def settings():
     resp = make_response(render_template('lab3/settings.html', color=color, bg_color=bg_color, font_size=font_size, text_transform=text_transform))
     return resp
 
+@lab3.route('/lab3/ticket')
+def ticket():
+    if request.args:
+
+        fio = request.args.get('fio', '').strip()
+        shelf = request.args.get('shelf', '')
+        bedding = request.args.get('bedding') == 'on'
+        baggage = request.args.get('baggage') == 'on'
+        age_str = request.args.get('age', '').strip()
+        departure = request.args.get('departure', '').strip()
+        destination = request.args.get('destination', '').strip()
+        date = request.args.get('date', '')
+        insurance = request.args.get('insurance') == 'on'
+
+        errors = []
+        if not fio:
+            errors.append("ФИО пассажира обязательно")
+        if not shelf:
+            errors.append("Выберите полку")
+        if not age_str:
+            errors.append("Возраст обязателен")
+        if not departure:
+            errors.append("Пункт выезда обязателен")
+        if not destination:
+            errors.append("Пункт назначения обязателен")
+        if not date:
+            errors.append("Дата поездки обязательна")
+
+        try:
+            age = int(age_str)
+            if age < 1 or age > 120:
+                errors.append("Возраст должен быть от 1 до 120 лет")
+        except ValueError:
+            errors.append("Возраст должен быть числом")
+
+        if errors:
+            return render_template('lab3/ticket_form.html', 
+                                 errors=errors,
+                                 fio=fio, shelf=shelf, bedding=bedding, 
+                                 baggage=baggage, age=age_str, 
+                                 departure=departure, destination=destination, 
+                                 date=date, insurance=insurance)
+
+        base_price = 700 if age < 18 else 1000  
+        shelf_price = 100 if shelf in ['нижняя', 'нижняя боковая'] else 0
+        bedding_price = 75 if bedding else 0
+        baggage_price = 250 if baggage else 0
+        insurance_price = 150 if insurance else 0
+
+        total_price = base_price + shelf_price + bedding_price + baggage_price + insurance_price
+
+        ticket_data = {
+            'fio': fio,
+            'shelf': shelf,
+            'bedding': 'Да' if bedding else 'Нет',
+            'baggage': 'Да' if baggage else 'Нет',
+            'age': age,
+            'ticket_type': 'Детский билет' if age < 18 else 'Взрослый билет',
+            'departure': departure,
+            'destination': destination,
+            'date': date,
+            'insurance': 'Да' if insurance else 'Нет',
+            'base_price': base_price,
+            'shelf_price': shelf_price,
+            'bedding_price': bedding_price,
+            'baggage_price': baggage_price,
+            'insurance_price': insurance_price,
+            'total_price': total_price
+        }
+
+        return render_template('lab3/ticket_result.html', ticket=ticket_data)
+    
+    return render_template('lab3/ticket_form.html')
+
+
+@lab3.route('/lab3/settings/clear')
+def clear_settings():
+    response = make_response(redirect('/lab3/settings'))
+    
+    cookies_to_clear = ['color', 'bg_color', 'font_size', 'text_transform']
+    
+    for cookie_name in cookies_to_clear:
+        response.set_cookie(cookie_name, '', expires=0)
+    
+    return response

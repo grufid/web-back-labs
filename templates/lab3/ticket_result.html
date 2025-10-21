@@ -1,0 +1,49 @@
+{% extends "base.html" %} 
+
+{% block lab %}Лабораторная работа 3 - Билет оформлен{% endblock %}
+
+{% block main %}
+    <div class="ticket" style="border: 2px solid #333; padding: 20px; max-width: 600px; margin: 0 auto; background: white;">
+        <h1 style="text-align: center; color: #2c3e50;">Железнодорожный билет</h1>
+        
+        <div class="ticket-info">
+            <p><strong>ФИО пассажира:</strong> {{ ticket.fio }}</p>
+            <p><strong>Тип билета:</strong> {{ ticket.ticket_type }}</p>
+            <p><strong>Возраст:</strong> {{ ticket.age }} лет</p>
+            <p><strong>Маршрут:</strong> {{ ticket.departure }} → {{ ticket.destination }}</p>
+            <p><strong>Дата поездки:</strong> {{ ticket.date }}</p>
+            <p><strong>Полка:</strong> {{ ticket.shelf }}</p>
+            <p><strong>Бельё:</strong> {{ ticket.bedding }}</p>
+            <p><strong>Багаж:</strong> {{ ticket.baggage }}</p>
+            <p><strong>Страховка:</strong> {{ ticket.insurance }}</p>
+        </div>
+
+        <div class="price-calculation" style="background: #f8f9fa; padding: 15px; margin: 20px 0; border-radius: 5px;">
+            <h3 style="margin-top: 0;">Расчет стоимости:</h3>
+            <p>Базовая стоимость: {{ ticket.base_price }} руб.</p>
+            {% if ticket.shelf_price > 0 %}
+            <p>Доплата за полку: +{{ ticket.shelf_price }} руб.</p>
+            {% endif %}
+            {% if ticket.bedding_price > 0 %}
+            <p>Бельё: +{{ ticket.bedding_price }} руб.</p>
+            {% endif %}
+            {% if ticket.baggage_price > 0 %}
+            <p>Багаж: +{{ ticket.baggage_price }} руб.</p>
+            {% endif %}
+            {% if ticket.insurance_price > 0 %}
+            <p>Страховка: +{{ ticket.insurance_price }} руб.</p>
+            {% endif %}
+            <hr>
+            <p style="font-size: 1.2em; font-weight: bold;">Итого: {{ ticket.total_price }} руб.</p>
+        </div>
+
+        <div style="text-align: center; margin-top: 20px;">
+            <p>Билет успешно оформлен!</p>
+        </div>
+    </div>
+
+    <div style="text-align: center; margin-top: 20px;">
+        <a href="/lab3/ticket">Оформить еще один билет</a> | 
+        <a href="/lab3/">Вернуться к лабораторной работе 3</a>
+    </div>
+{% endblock %}
