@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block lab %}Лабораторная работа 3{% endblock %}
+
+{% block main %}
+    <h1>Cookies</h1>
+    <form>
+        <div>
+            <p><label for="color">Выберите цвет текста:</label>
+            <input type="color" id=color name="color" value="{{ color or ''}}"></p>
+            <p><label>Выберите цвет фона</label>
+            <input type="color" id=bg_color name="bg_color" value="{{ bg_color or ''}}"></p>
+            <p><label>Выберите размер шрифта:</label>
+            <input type="number" id=font_size name="font_size" value="{{ font_size or '' }}"></p>
+            <p><label>Стиль текста:</label>
+            <select id="text_transform" name="text_transform">
+                <option value="none" {{ 'selected' if text_transform == 'none' else '' }}>Как есть</option>
+                <option value="uppercase" {{ 'selected' if text_transform == 'uppercase' else '' }}>ВСЕ ЗАГЛАВНЫЕ</option>
+                <option value="lowercase" {{ 'selected' if text_transform == 'lowercase' else '' }}>все строчные</option>
+                <option value="capitalize" {{ 'selected' if text_transform == 'capitalize' else '' }}>С Заглавных Букв</option>
+            </select>
+        </div>
+        <div>
+            <button type="submit">OK</button>
+        </div>
+    </form>
+{% endblock%}
