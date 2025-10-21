@@ -7,7 +7,7 @@
 
 <div style="margin-bottom: 20px; padding: 15px; border: 1px solid #ccc; background-color: #f9f9f9;">
     <h3>Добавить новый цветок:</h3>
-    <form action="{{ url_for('add_flower_post') }}" method="POST">
+    <form action="{{ url_for('lab2.add_flower_post') }}" method="POST">
         <input type="text" name="name" placeholder="Название цветка" required style="padding: 5px; margin: 5px;">
         <input type="number" name="price" placeholder="Цена" required style="padding: 5px; margin: 5px;">
         <button type="submit" style="padding: 5px 15px; background-color: #29592a; color: rgb(255, 255, 255); border: none;">
@@ -17,7 +17,7 @@
 </div>
 
 <div style="margin-bottom: 20px;">
-    <a href="{{ url_for('delete_all_flowers') }}" 
+    <a href="{{ url_for('lab2.delete_all_flowers') }}" 
        style="background-color: #792121; color: rgb(255, 255, 255); padding: 10px 15px; text-decoration: none; border-radius: 4px;"
        onclick="return confirm('Вы уверены, что хотите удалить ВСЕ цветы? Это действие нельзя отменить!')">
         Удалить все цветы
@@ -31,7 +31,7 @@
     {% for flower in flowers %}
     <li style="padding: 10px; margin: 5px 0; border: 1px solid #ddd; border-radius: 4px; background-color: white;">
         <span style="font-weight: bold;">{{ flower.name }}</span> - {{ flower.price }} руб.
-        <a href="{{ url_for('delete_flower', flower_id=loop.index0) }}" 
+        <a href="{{ url_for('lab2.delete_flower', flower_id=loop.index0) }}" 
            style="color: rgb(120, 12, 12); margin-left: 15px; text-decoration: none; padding: 3px 8px; border: 1px solid red; border-radius: 3px;"
            onclick='return confirm("Удалить цветок \"{{ flower.name }}\"?")'>
             Удалить
