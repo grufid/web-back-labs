@@ -180,3 +180,94 @@ def clear_settings():
         response.set_cookie(cookie_name, '', expires=0)
     
     return response
+
+cosmetics = [
+    {'name': 'Тональный крем Perfect Match', 'price': 1200, 'brand': "L'Oreal", 'type': 'Лицо', 'volume': '30мл'},
+    {'name': 'Тушь для ресниц Volume Boost', 'price': 890, 'brand': 'Maybelline', 'type': 'Глаза', 'volume': '10мл'},
+    {'name': 'Помада Matte Revolution', 'price': 1500, 'brand': 'MAC', 'type': 'Губы', 'volume': '3г'},
+    {'name': 'Увлажняющий крем Hydra Genius', 'price': 2300, 'brand': 'La Roche-Posay', 'type': 'Уход', 'volume': '50мл'},
+    {'name': 'Тени для век Ultimate Palette', 'price': 750, 'brand': 'NYX', 'type': 'Глаза', 'volume': '5г'},
+    {'name': 'Румяна Blush Paradise', 'price': 1100, 'brand': 'NARS', 'type': 'Лицо', 'volume': '4г'},
+    {'name': 'Лак для ногтей Gel Couture', 'price': 450, 'brand': 'Essie', 'type': 'Ногти', 'volume': '13мл'},
+    {'name': 'Пудра Lumiere Velvet', 'price': 1800, 'brand': 'Chanel', 'type': 'Лицо', 'volume': '15г'},
+    {'name': 'Консилер High Coverage', 'price': 950, 'brand': 'Catrice', 'type': 'Лицо', 'volume': '5мл'},
+    {'name': 'Хайлайтер Diamond Bomb', 'price': 1300, 'brand': 'Fenty Beauty', 'type': 'Лицо', 'volume': '8г'},
+    {'name': 'BB крем All-in-One', 'price': 850, 'brand': 'Garnier', 'type': 'Лицо', 'volume': '40мл'},
+    {'name': 'Подводка для глаз Liquid Liner', 'price': 680, 'brand': 'Maybelline', 'type': 'Глаза', 'volume': '2мл'},
+    {'name': 'Бальзам для губ Lip Therapy', 'price': 350, 'brand': 'Nivea', 'type': 'Губы', 'volume': '4г'},
+    {'name': 'Сыворотка Vitamin C', 'price': 3200, 'brand': 'The Ordinary', 'type': 'Уход', 'volume': '30мл'},
+    {'name': 'Крем для рук Repair', 'price': 280, 'brand': 'Neutrogena', 'type': 'Уход', 'volume': '75мл'},
+    {'name': 'Гель для бровей Brow Fix', 'price': 520, 'brand': 'Anastasia', 'type': 'Брови', 'volume': '8мл'},
+    {'name': 'Спрей для лица Thermal', 'price': 950, 'brand': 'Avene', 'type': 'Уход', 'volume': '150мл'},
+    {'name': 'Палетка контуринга', 'price': 1400, 'brand': 'Kylie Cosmetics', 'type': 'Лицо', 'volume': '12г'},
+    {'name': 'Масло для снятия макияжа', 'price': 1100, 'brand': 'DHC', 'type': 'Уход', 'volume': '120мл'},
+    {'name': 'Кисть для пудры', 'price': 1800, 'brand': 'Sigma', 'type': 'Аксессуар', 'volume': '-'},
+    {'name': 'Праймер для век', 'price': 620, 'brand': 'Urban Decay', 'type': 'Глаза', 'volume': '10мл'},
+    {'name': 'Блеск для губ Shine Loud', 'price': 780, 'brand': 'NYX', 'type': 'Губы', 'volume': '4мл'},
+    {'name': 'Крем-хайлайтер', 'price': 1250, 'brand': 'Rare Beauty', 'type': 'Лицо', 'volume': '15мл'},
+    {'name': 'Салфетки для снятия макияжа', 'price': 320, 'brand': 'Garnier', 'type': 'Уход', 'volume': '25шт'},
+    {'name': 'Пудровые тени Mono', 'price': 480, 'brand': 'MAC', 'type': 'Глаза', 'volume': '1.5г'}
+]
+
+@lab3.route('/lab3/cosmetics')
+def cosmetics_search():
+
+    min_price = request.args.get('min_price', '')
+    max_price = request.args.get('max_price', '')
+    
+    if not min_price:
+        min_price = request.cookies.get('min_price', '')
+    if not max_price:
+        max_price = request.cookies.get('max_price', '')
+    
+    # Рассчитываем минимальную и максимальную цены из всех товаров
+    all_prices = [product['price'] for product in cosmetics]
+    global_min_price = min(all_prices)
+    global_max_price = max(all_prices)
+    
+    # Фильтрация товаров
+    filtered_products = cosmetics.copy()
+    
+    if min_price:
+        try:
+            min_price_int = int(min_price)
+    
+            if max_price and min_price_int > int(max_price):
+                min_price, max_price = max_price, min_price
+                min_price_int = int(min_price)
+            filtered_products = [p for p in filtered_products if p['price'] >= min_price_int]
+        except ValueError:
+            min_price = ''
+    
+    if max_price:
+        try:
+            max_price_int = int(max_price)
+            filtered_products = [p for p in filtered_products if p['price'] <= max_price_int]
+        except ValueError:
+            max_price = ''
+    
+    response = make_response(render_template('lab3/cosmetics.html',
+        products=filtered_products,
+        min_price=min_price,
+        max_price=max_price,
+        global_min_price=global_min_price,
+        global_max_price=global_max_price,
+        products_count=len(filtered_products),
+        total_count=len(cosmetics)
+    ))
+    
+    if min_price or max_price:
+        if min_price:
+            response.set_cookie('min_price', min_price, max_age=60*60*24*7)
+        if max_price:
+            response.set_cookie('max_price', max_price, max_age=60*60*24*7)
+    
+    return response
+
+@lab3.route('/lab3/cosmetics/reset')
+def reset_cosmetics():
+    """Сброс фильтров и очистка кук"""
+    response = make_response(redirect('/lab3/cosmetics'))
+    response.set_cookie('min_price', '', expires=0)
+    response.set_cookie('max_price', '', expires=0)
+    return response
