@@ -266,7 +266,6 @@ def cosmetics_search():
 
 @lab3.route('/lab3/cosmetics/reset')
 def reset_cosmetics():
-    """Сброс фильтров и очистка кук"""
     response = make_response(redirect('/lab3/cosmetics'))
     response.set_cookie('min_price', '', expires=0)
     response.set_cookie('max_price', '', expires=0)
