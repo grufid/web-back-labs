@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+
+{% block lab %}Лабораторная работа 4{% endblock %}
+
+{% block main %}
+    <h1 style="text-align:center">Холодильник</h1>
+    
+    <div style="max-width: 500px; margin: 0 auto; padding: 20px; background: #f8f9fa; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+        <h2 style="text-align: center; color: #2c3e50; margin-bottom: 20px;">Установка температуры</h2>
+        
+        <form method="post" style="text-align: center;">
+            <div style="margin-bottom: 20px;">
+                <label for="temperature" style="display: block; margin-bottom: 10px; font-weight: bold; color: #2c3e50;">
+                    Температура (°C):
+                </label>
+                <input type="number" id="temperature" name="temperature" 
+                       value="{{ temperature or '' }}"
+                       placeholder="Введите температуру"
+                       style="width: 200px; padding: 10px; border: 2px solid #3498db; border-radius: 5px; font-size: 16px; text-align: center;">
+            </div>
+            
+            <button type="submit" style="padding: 12px 30px; background: #3498db; color: white; border: none; border-radius: 5px; font-size: 16px; cursor: pointer;">
+                Установить температуру
+            </button>
+        </form>
+        
+        {% if error %}
+        <div style="color: #e74c3c; background: #ffeaea; padding: 15px; border-radius: 5px; margin-top: 20px; text-align: center; border: 1px solid #e74c3c; font-weight: bold;">
+             {{ error }}
+        </div>
+        {% endif %}
+        
+        {% if message %}
+        <div style="color: #27ae60; background: #eafaf1; padding: 20px; border-radius: 5px; margin-top: 20px; text-align: center; border: 1px solid #27ae60;">
+            <div style="font-size: 20px; font-weight: bold; margin-bottom: 10px;">
+                {{ message }}
+            </div>
+            {% if snowflakes %}
+            <div style="font-size: 30px; color: #085487;">
+                {{ snowflakes }}
+            </div>
+            {% endif %}
+        </div>
+        {% endif %}
+        
+        <div style="margin-top: 25px; padding: 15px; background: #c7e1ea; border-radius: 5px; border-left: 4px solid #084f7e;">
+            <h3 style="margin-top: 0; color: #2c3e50;">Диапазоны температур:</h3>
+            <ul style="text-align: left; color: #34495e;">
+                <li><strong>-12°C — -9°C:</strong> ❄️❄️❄️ </li>
+                <li><strong>-8°C — -5°C:</strong> ❄️❄️ </li>
+                <li><strong>-4°C — -1°C:</strong> ❄️ </li>
+            </ul>
+        </div>
+    </div>
+    
+    <div style="text-align: center; margin-top: 20px;">
+        <a href="/lab4" style="color: #021726; font-size: 26px;">Вернуться к меню</a>
+    </div>
+{% endblock %}
