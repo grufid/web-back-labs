@@ -6,6 +6,8 @@
     {% if authorized %}
         <h1>Добро пожаловать, {% if gender == 'male' %}дорогой{% else %}дорогая{% endif %} {{ name }}</h1>
         <div>
+            <a href="/lab4/users"><button>Список пользователей: </button></a></div>
+        <div>
             <form action="/lab4/logout" method="post">
                 <button>Выход</button>
             </form>
@@ -34,5 +36,8 @@
                 <button type="reset">Отмена</button>
             </div>
         </form>
+        <div style="text-align: center">
+            <a href="/lab4/register">Нет аккаунта? Зарегистрируйтесь</a>
+        </div>
     {% endif %}
 {% endblock %}

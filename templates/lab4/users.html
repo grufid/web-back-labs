@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block lab %}Пользователи{% endblock %}
+
+{% block main %}
+    <h1>Список пользователей</h1>
+    
+    <div>
+        <a href="/lab4/users/edit">Редактировать мои данные</a>
+        <form action="/lab4/users/delete" method="post" style="display: inline;">
+            <button type="submit" onclick="return confirm('Удалить аккаунт?')">Удалить мой аккаунт</button>
+        </form>
+    </div>
+    
+    <table border="1">
+        <tr>
+            <th>Имя</th>
+            <th>Логин</th>
+        </tr>
+        {% for user in users %}
+        <tr>
+            <td>{{ user.name }}</td>
+            <td>{{ user.login }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    
+    <a href="/lab4">Назад</a>
+{% endblock %}
