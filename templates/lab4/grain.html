@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+
+{% block lab %}Лабораторная работа 4 - Заказ зерна{% endblock %}
+
+{% block main %}
+    <h1 style="text-align:center">Заказ зерна</h1>
+    
+    <div style="max-width: 600px; margin: 0 auto; padding: 20px; background: #5d5c02; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+        <h2 style="text-align: center; color: #eef3d9; margin-bottom: 27px;">Оформление заказа</h2>
+        
+        <form method="post" style="text-align: left;">
+            <div style="margin-bottom: 20px;">
+                <label for="grain_type" style="display: block; margin-bottom: 18px; font-weight: bold; color: #e0efb8;">
+                    Тип зерна:
+                </label>
+                <select id="grain_type" name="grain_type" style="width: 100%; padding: 10px; border: 2px solid #cccc21; border-radius: 5px; font-size: 16px;">
+                    <option value=""> Выберите зерно </option>
+                    <option value="barley">Ячмень - 12 000 руб/т</option>
+                    <option value="oats">Овёс - 8 500 руб/т</option>
+                    <option value="wheat">Пшеница - 9 000 руб/т</option>
+                    <option value="rye">Рожь - 15 000 руб/т</option>
+                </select>
+            </div>
+            
+            <div style="margin-bottom: 20px;">
+                <label for="weight" style="display: block; margin-bottom: 18px; font-weight: bold; color: #f3f9b2;">
+                    Вес (тонны):
+                </label>
+                <input type="number" id="weight" name="weight" 
+                       step="0.1" min="0.1"
+                       placeholder="Введите вес в тоннах"
+                       style="width: 95%; padding: 10px; border: 2px solid #3498db; border-radius: 5px; font-size: 16px;">
+            </div>
+            
+            <div style="text-align: center;">
+                <button type="submit" style="padding: 12px 30px; background: #043b1b7e; color: rgb(128, 130, 51); border: none; border-radius: 5px; font-size: 19px; cursor: pointer;">
+                    Оформить заказ
+                </button>
+            </div>
+        </form>
+        
+        {% if error %}
+        <div style="color: #891609; background: #aab16f; padding: 15px; border-radius: 5px; margin-top: 20px; text-align: center; border: 1px solid #430903; font-weight: bold;">
+             {{ error }}
+        </div>
+        {% endif %}
+        
+        {% if success %}
+        <div style="color: #0a371d; background: #d1dc85; padding: 20px; border-radius: 5px; margin-top: 20px; text-align: center; border: 1px solid #27ae60;">
+            <div style="font-size: 20px; font-weight: bold; margin-bottom: 15px;">
+                Заказ успешно сформирован
+            </div>
+            <div style="font-size: 16px; margin-bottom: 10px;">
+                Вы заказали <strong>{{ grain_name }}</strong>
+            </div>
+            <div style="font-size: 16px; margin-bottom: 10px;">
+                Вес: <strong>{{ weight }} т</strong>
+            </div>
+            {% if has_discount %}
+            <div style="color: #935116; margin-bottom: 10px;">
+                Применена скидка 10% за большой объём
+            </div>
+            <div style="font-size: 14px; color: #7f8c8d; margin-bottom: 10px;">
+                Размер скидки: <strong>{{ "%.2f"|format(discount) }} руб</strong>
+            </div>
+            {% endif %}
+            <div style="font-size: 18px; font-weight: bold;">
+                Сумма к оплате: <strong>{{ "%.2f"|format(total_cost) }} руб</strong>
+            </div>
+        </div>
+        {% endif %}
+        
+        <div style="margin-top: 25px; padding: 15px; background: #e8f4f8; border-radius: 5px; border-left: 4px solid #053015;">
+            <h3 style="margin-top: 0; color: #2c3e50;">Цены на зерно:</h3>
+            <ul style="color: #34495e;">
+                <li><strong>Ячмень:</strong> 12 000 руб/т</li>
+                <li><strong>Овёс:</strong> 8 500 руб/т</li>
+                <li><strong>Пшеница:</strong> 9 000 руб/т</li>
+                <li><strong>Рожь:</strong> 15 000 руб/т</li>
+            </ul>
+            <p style="color: #d2e622; font-weight: bold; margin: 10px 0 0 0;">
+                 Скидка 10% при заказе более 10 тонн!
+            </p>
+        </div>
+    </div>
+    
+    <div style="text-align: center; margin-top: 20px;">
+        <a href="/lab4" style="color: #052032; font-size: 26px;"> Вернуться к меню</a>
+    </div>
+{% endblock %}
