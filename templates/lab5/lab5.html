@@ -52,7 +52,7 @@
             <a class="menu-link" href="/lab5/create">Создать статью</a>
         </li>
         <li>
-            <div class="user">Anonymous</div>
+            <span>{{ login or 'anonymous' }}</span>
         </li>
     </ol>
 {% endblock %}
