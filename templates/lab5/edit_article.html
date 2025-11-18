@@ -26,6 +26,20 @@
             <textarea id="article_text" name="article_text" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px; height: 200px; resize: vertical;" required>{{ article.article_text }}</textarea>
         </div>
         
+        <div>
+            <label>
+                <input type="checkbox" name="is_favorite" value="true" {% if article['is_favorite'] %}checked{% endif %}>
+                Добавить в избранное
+            </label>
+        </div>
+
+        <div>
+            <label>
+                <input type="checkbox" name="is_public" value="true" {% if article['is_public'] %}checked{% endif %}>
+                Сделать публичной
+            </label>
+        </div>
+
         <button type="submit" style="background: #007bff; color: white; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer;">
             Сохранить изменения
         </button>

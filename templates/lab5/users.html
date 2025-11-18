@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block lab %}Лабораторная работа 5{% endblock %}
+
+{% block main %}
+    <h1> Список пользователей</h1>
+
+    <div style="margin-bottom: 20px;">
+        <a href="/lab5/list"> Мои статьи</a> | 
+        <a href="/lab5/profile">Мой профиль</a> |
+        <a href="/lab5/public">Публичные статьи</a>
+    </div>
+
+    {% if users %}
+        <div style="background: white; border-radius: 10px; padding: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+            <table style="width: 100%; border-collapse: collapse;">
+                <thead>
+                    <tr style="background: linear-gradient(45deg, #362203, #9a9d69); color: white;">
+                        <th style="padding: 12px; text-align: left; border-radius: 5px 0 0 0;">Логин</th>
+                        <th style="padding: 12px; text-align: left; border-radius: 0 5px 0 0;">Реальное имя</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for user in users %}
+                    <tr style="border-bottom: 1px solid #eee;">
+                        <td style="padding: 12px;">
+                            <strong>{{ user['login'] }}</strong>
+                        </td>
+                        <td style="padding: 12px;">
+                            {% if user['full_name'] %}
+                                {{ user['full_name'] }}
+                            {% else %}
+                                <span style="color: #878484;">— не указано —</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        
+        <div style="margin-top: 15px; color: #382525; font-size: 0.9em;">
+            Всего пользователей: {{ users|length }}
+        </div>
+    {% else %}
+        <div style="text-align: center; padding: 40px; background: #f8f9fa; border-radius: 10px;">
+            <p>Пользователей не найдено</p>
+        </div>
+    {% endif %}
+{% endblock %}
