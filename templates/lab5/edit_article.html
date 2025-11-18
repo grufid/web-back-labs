@@ -6,7 +6,7 @@
     <h1>Редактирование статьи</h1>
 
     <div style="margin-bottom: 20px;">
-        <a href="/lab5/list" style="text-decoration: none; color: #007bff;">← Назад к статьям</a>
+        <a href="/lab5/list" style="text-decoration: none; color: #062a50;"> Назад к статьям</a>
     </div>
 
     {% if error %}
@@ -18,12 +18,12 @@
     <form method="POST">
         <div style="margin-bottom: 15px;">
             <label for="title" style="display: block; margin-bottom: 5px; font-weight: bold;">Название статьи:</label>
-            <input type="text" id="title" name="title" value="{{ article.title }}" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;" required>
+            <input type="text" id="title" name="title" value="{{ article.title }}" style="width: 95%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;" required>
         </div>
         
         <div style="margin-bottom: 15px;">
             <label for="article_text" style="display: block; margin-bottom: 5px; font-weight: bold;">Текст статьи:</label>
-            <textarea id="article_text" name="article_text" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px; height: 200px; resize: vertical;" required>{{ article.article_text }}</textarea>
+            <textarea id="article_text" name="article_text" style="width: 95%; padding: 8px; border: 1px solid #ddd; border-radius: 4px; height: 200px; resize: vertical;" required>{{ article.article_text }}</textarea>
         </div>
         
         <div>
@@ -40,10 +40,10 @@
             </label>
         </div>
 
-        <button type="submit" style="background: #007bff; color: white; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer;">
+        <button type="submit" style="background: #1f262e; color: rgb(194, 202, 169); padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer;">
             Сохранить изменения
         </button>
-        <a href="/lab5/list" style="background: #6c757d; color: white; padding: 10px 20px; text-decoration: none; border-radius: 4px; margin-left: 10px;">
+        <a href="/lab5/list" style="background: #1f262e; color: rgb(153, 165, 124); padding: 10px 20px; text-decoration: none; border-radius: 4px; margin-left: 10px;">
             Отмена
         </a>
     </form>
