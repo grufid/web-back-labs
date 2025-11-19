@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block lab %}Лабораторная работа 4{% endblock %}
+
+{% block main %}
+    {% if authorized %}
+        <h1>Добро пожаловать, {% if gender == 'male' %}дорогой{% else %}дорогая{% endif %} {{ name }}</h1>
+        <div>
+            <a href="/lab4/users"><button>Список пользователей: </button></a></div>
+        <div>
+            <form action="/lab4/logout" method="post">
+                <button>Выход</button>
+            </form>
+        </div>
+        <br>
+        <a href="/lab4">Вернуться к меню</a>
+    {% else %}
+        <h1>Вход</h1>
+        <h2>Пожалуйста, авторизуйтесь</h2>
+        <form method="post">
+            <div>
+                <label for="login">Пользователь:</label>
+                <input type="text" id="login" name="login" value="{{ login or ''}}">
+            </div>
+            <div>
+                <label for="password">Пароль:</label>
+                <input type="password" id="password" name="password">
+            </div>
+            {% if error %}
+            <div style="color: red">
+             {{ error }}
+            </div>
+            {% endif %}
+            <div>
+                <button type="submit">Войти</button>
+                <button type="reset">Отмена</button>
+            </div>
+        </form>
+        <div style="text-align: center">
+            <a href="/lab4/register">Нет аккаунта? Зарегистрируйтесь</a>
+        </div>
+    {% endif %}
+{% endblock %}
