@@ -14,9 +14,6 @@
     {% else %}
         {% for article in articles %}
             <div>
-                {% if article['is_favorite'] %}
-                    <span style="color: gold; font-weight: bold;">★ </span>
-                {% endif %}
                 <h2>{{ article['title'] }}</h2>
                 <blockquote>{{ article['article_text'] }}</blockquote>
                 <div style="color: #666; font-style: italic;">
