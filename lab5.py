@@ -349,7 +349,7 @@ def public_articles():
     articles = cur.fetchall()
     db_close(conn, cur)
 
-    if not articles:
-        return render_template('lab5/public.html', articles=[], message="Публичных статей нет")
-
-    return render_template('lab5/public.html', articles=articles)
+    return render_template('lab5/public.html', 
+                         articles=articles,
+                         message="Публичных статей нет" if not articles else None,
+                         login=session.get('login'))
