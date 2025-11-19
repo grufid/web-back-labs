@@ -5,30 +5,23 @@
 {% block main %}
     <h1>Публичные статьи</h1>
 
-    {% if error %}
-        <div style="color: red; margin-bottom: 15px;">{{ error }}</div>
-    {% endif %}
-
-    {% if not articles %}
-        <p>Пока нет публичных статей.</p>
-    {% else %}
+    {% if message %}
+        <p>{{ message }}</p>
+    {% elif articles %}
         {% for article in articles %}
-            <div>
-                <h2>{{ article['title'] }}</h2>
-                <blockquote>{{ article['article_text'] }}</blockquote>
-                <div style="color: #666; font-style: italic;">
-                    Автор: {{ article['full_name'] or article['login'] }}
-                </div>
+            <div class="article">
+                <h3>{{ article['title'] }}</h3>
+                <p>{{ article['article_text'] }}</p>
             </div>
+            <hr>
         {% endfor %}
+    {% else %}
+        <p>Нет публичных статей</p>
     {% endif %}
-    
-    <div style="margin-top: 20px;">
         {% if login %}
             <a href="/lab5/list">Мои статьи</a> | 
         {% else %}
             <a href="/lab5/login">Вход</a> | 
         {% endif %}
-        <a href="/lab5/">На главную</a>
-    </div>
+    <p><a href="/lab5/">На главную</a></p>
 {% endblock %}
