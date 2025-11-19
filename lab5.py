@@ -206,7 +206,6 @@ def edit_article(article_id):
     title = request.form.get('title')
     article_text = request.form.get('article_text')
     
-    # ИСПРАВЛЕНИЕ: Правильное определение чекбоксов
     is_favorite = 'is_favorite' in request.form
     is_public = 'is_public' in request.form
 
@@ -215,7 +214,6 @@ def edit_article(article_id):
     if not title or not article_text:
         return render_template('lab5/edit_article.html', article=article, error='Название и текст статьи не могут быть пустыми')
 
-    # ИСПРАВЛЕНИЕ: Правильный порядок параметров
     if current_app.config['DB_TYPE'] == 'postgres':
         cur.execute("UPDATE articles SET title=%s, article_text=%s, is_favorite=%s, is_public=%s WHERE id=%s;", 
                    (title, article_text, is_favorite, is_public, article_id))
@@ -343,27 +341,15 @@ def users_list():
 def public_articles():
     conn, cur = db_connect()
 
-    try:
-        if current_app.config['DB_TYPE'] == 'postgres':
-            cur.execute("""
-                SELECT a.*, u.login, u.full_name 
-                FROM articles a 
-                JOIN users u ON a.user_id = u.id 
-                WHERE a.is_public = TRUE 
-                ORDER BY a.is_favorite DESC, a.id DESC;
-            """)
-        else:
-            cur.execute("""
-                SELECT a.*, u.login, u.full_name 
-                FROM articles a 
-                JOIN users u ON a.user_id = u.id 
-                WHERE a.is_public = 1 
-                ORDER BY a.is_favorite DESC, a.id DESC;
-            """)
-        articles = cur.fetchall()
-        
-        db_close(conn, cur)
-        return render_template('lab5/public_articles.html', articles=articles, login=session.get('login'))
-    except Exception as e:
-        db_close(conn, cur)
-        return render_template('lab5/public_articles.html', articles=[], error=f'Ошибка загрузки статей: {e}')
+    if current_app.config['DB_TYPE'] == 'postgres':
+        cur.execute("SELECT * FROM articles WHERE is_public=true;")
+    else:
+        cur.execute("SELECT * FROM articles WHERE is_public=1;")
+
+    articles = cur.fetchall()
+    db_close(conn, cur)
+
+    if not articles:
+        return render_template('lab5/public.html', articles=[], message="Публичных статей нет")
+
+    return render_template('lab5/public.html', articles=articles)
