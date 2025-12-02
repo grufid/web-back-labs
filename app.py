@@ -4,6 +4,7 @@ from lab2 import lab2
 from lab3 import lab3
 from lab4 import lab4
 from lab5 import lab5
+from lab6 import lab6
 
 import datetime
 import os
@@ -18,6 +19,7 @@ app.register_blueprint(lab2)
 app.register_blueprint(lab3)
 app.register_blueprint(lab4)
 app.register_blueprint(lab5)
+app.register_blueprint(lab6)
 
 visit_log = []
 
@@ -228,7 +230,7 @@ def index():
                 <a href="/lab5">Лабораторная V</a>
             </li>
             <li>
-                <a href="/lab6">Лабораторная VI/a>
+                <a href="/lab6">Лабораторная VI</a>
             </li>
         </main>
         <footer>
