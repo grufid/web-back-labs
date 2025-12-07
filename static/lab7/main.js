@@ -9,14 +9,20 @@ function fillFilmList() {
         for(let i = 0; i<films.length; i++) {
             let tr = document.createElement('tr');
 
-            let tdTitle = document.createElement('td');
             let tdTitleRus = document.createElement('td');
+            let tdTitle = document.createElement('td');
             let tdYear = document.createElement('td');
             let tdActions = document.createElement('td');
 
-            tdTitle.innerText = films[i].title == films[i].title_ru ? '' : films[i].title;
             tdTitleRus.innerText = films[i].title_ru;
+            tdTitle.innerText = films[i].title || films[i].title_ru;
             tdYear.innerText = films[i].year;
+
+
+            if (films[i].title && films[i].title !== films[i].title_ru) {
+                tdTitle.style.fontStyle = 'italic';
+                tdTitle.style.color = '#666'; // Можно добавить серый цвет
+            }
 
             let editButton = document.createElement('button');
             editButton.innerText = 'редактировать';
@@ -33,8 +39,8 @@ function fillFilmList() {
             tdActions.append(editButton);
             tdActions.append(delButton);
 
-            tr.append(tdTitle);
             tr.append(tdTitleRus);
+            tr.append(tdTitle);
             tr.append(tdYear);
             tr.append(tdActions);
 
