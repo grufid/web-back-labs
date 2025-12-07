@@ -5,7 +5,7 @@
 {% block script %}
 <script src="{{ url_for('static', filename='lab7/main.js')}}"></script>
 <style>
-    .modal {
+.modal {
     display: none;
     z-index: 100;
     position: fixed;   
@@ -18,7 +18,9 @@
     width: 500px;
     max-width: 90vw;    
     border-radius: 8px;  
-
+}
+.error-message {
+    color: red;
 }
 </style>
 {% endblock %}
@@ -66,6 +68,7 @@
         <label>
             Описание:
             <textarea id="description"></textarea>
+            <div id="description-error" class="error-message"></div>
         </label><br>
 
         <button onclick="sendFilm()">ОК</button>
