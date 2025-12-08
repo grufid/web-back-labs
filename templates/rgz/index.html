@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Кулинарные рецепты</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 1200px; margin: 0 auto; padding: 20px; background: #f5f5f5; }
+        header { text-align: center; margin-bottom: 30px; padding: 20px; background: white; border-radius: 10px; border-bottom: 3px solid #4CAF50; }
+        .section { background: white; padding: 20px; margin-bottom: 20px; border-radius: 10px; }
+        input, select, button { padding: 10px; margin: 5px; border: 1px solid #ddd; border-radius: 5px; font-size: 16px; }
+        button { background: #4CAF50; color: white; border: none; cursor: pointer; }
+        button:hover { background: #45a049; }
+        .recipes { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 20px; margin-top: 20px; }
+        .recipe { background: white; border-radius: 10px; overflow: hidden; cursor: pointer; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .recipe:hover { transform: translateY(-5px); }
+        .recipe-image { width: 100%; height: 180px; object-fit: cover; border-bottom: 1px solid #eee; }
+        .recipe-content { padding: 15px; }
+        .recipe-title { margin: 0 0 10px 0; font-size: 18px; font-weight: bold; }
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; }
+        .modal-content { background: white; margin: 50px auto; padding: 25px; max-width: 700px; max-height: 80vh; overflow-y: auto; border-radius: 10px; }
+        .close { float: right; font-size: 28px; cursor: pointer; color: #666; }
+        .error-input { border-color: #f44336 !important; background: #ffebee; }
+        .delete-account-btn { background: #ff9800 !important; margin-left: 10px; }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Кулинарные рецепты</h1>
+        <p>Студент: Шамшиева Даяна Артуровна | Группа: ФБИ-32</p>
+    </header>
+
+    <div class="section" id="auth">
+        <div id="login-form">
+            <h3>Вход администратора</h3>
+            <input type="text" id="username" placeholder="Логин" autocomplete="username">
+            <input type="password" id="password" placeholder="Пароль" autocomplete="current-password">
+            <button onclick="login()">Войти</button>
+            <p style="color: #666; font-size: 14px; margin-top: 10px;">Используйте латинские буквы, цифры и специальные символы</p>
+        </div>
+        <div id="admin-panel" style="display: none;">
+            <h3>Администратор: <span id="admin-name"></span>
+                <button onclick="logout()" style="background: #666;">Выйти</button>
+                <button onclick="showAddForm()">+ Добавить рецепт</button>
+                <button class="delete-account-btn" onclick="showDeleteAccountForm()">Удалить аккаунт</button>
+            </h3>
+        </div>
+    </div>
+
+    <div class="section">
+        <h3>Поиск рецептов</h3>
+        <input type="text" id="search" placeholder="Название рецепта">
+        <input type="text" id="ingredients" placeholder="Ингредиенты через запятую">
+        <select id="mode">
+            <option value="any">Хотя бы один ингредиент</option>
+            <option value="all">Все ингредиенты</option>
+        </select>
+        <button onclick="searchRecipes()">Найти</button>
+        <button onclick="resetSearch()" style="background: #666;">Сбросить</button>
+    </div>
+
+    <h3>Рецепты (<span id="recipe-count">0</span>)</h3>
+    <div class="recipes" id="recipes-container"></div>
+
+    <div class="modal" id="recipe-modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">×</span>
+            <div id="recipe-details"></div>
+        </div>
+    </div>
+
+    <div class="modal" id="form-modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeForm()">×</span>
+            <h3 id="form-title">Добавить рецепт</h3>
+            <input type="hidden" id="recipe-id">
+            <p><input type="text" id="recipe-title" placeholder="Название рецепта" style="width:100%;"></p>
+            <p><input type="text" id="recipe-image" placeholder="URL изображения (необязательно)" style="width:100%;"></p>
+            <p><textarea id="recipe-ingredients" placeholder="Ингредиенты (каждый с новой строки)" style="width:100%; height:100px;"></textarea></p>
+            <p><textarea id="recipe-steps" placeholder="Шаги приготовления" style="width:100%; height:100px;"></textarea></p>
+            <button onclick="saveRecipe()" style="width:100%;">Сохранить</button>
+        </div>
+    </div>
+
+    <div class="modal" id="delete-account-modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeDeleteAccountForm()">×</span>
+            <h3>Удаление аккаунта</h3>
+            <p>Для подтверждения удаления аккаунта введите пароль:</p>
+            <input type="password" id="confirm-password" placeholder="Пароль" style="width:100%; margin:10px 0;">
+            <button onclick="deleteAccount()" style="width:100%; background: #f44336;">Подтвердить удаление аккаунта</button>
+            <p style="color: #666; font-size: 14px; margin-top: 10px;">Внимание! Это действие необратимо.</p>
+        </div>
+    </div>
+
+    <script>
+        let isAdmin = false, recipes = [], currentAdmin = '';
+
+        async function apiCall(method, params = {}) {
+            const res = await fetch('/rgz/api', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({jsonrpc: '2.0', method, params, id: Date.now()})
+            });
+            const data = await res.json();
+            if (data.error) throw new Error(data.error.message);
+            return data.result;
+        }
+
+        function validateCredentials(username, password) {
+            const validRegex = /^[a-zA-Z0-9!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]*$/;
+            
+            if (!username || !password) {
+                return 'Логин и пароль не могут быть пустыми';
+            }
+            
+            if (!validRegex.test(username) || !validRegex.test(password)) {
+                return 'Логин и пароль должны содержать только латинские буквы, цифры и специальные символы';
+            }
+            
+            if (username.length < 3) {
+                return 'Логин должен быть минимум 3 символа';
+            }
+            
+            if (password.length < 6) {
+                return 'Пароль должен быть минимум 6 символов';
+            }
+            
+            return null;
+        }
+
+        async function login() {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            
+            const validationError = validateCredentials(username, password);
+            if (validationError) {
+                alert(validationError);
+                return;
+            }
+            
+            try {
+                await apiCall('login', {username, password});
+                isAdmin = true;
+                currentAdmin = username;
+                document.getElementById('login-form').style.display = 'none';
+                document.getElementById('admin-panel').style.display = 'block';
+                document.getElementById('admin-name').textContent = username;
+                loadRecipes();
+            } catch (e) {
+                alert('Ошибка: ' + e.message);
+                ['username','password'].forEach(id => {
+                    const el = document.getElementById(id);
+                    el.classList.add('error-input');
+                    setTimeout(() => el.classList.remove('error-input'), 2000);
+                });
+            }
+        }
+
+        async function logout() {
+            await apiCall('logout');
+            isAdmin = false;
+            currentAdmin = '';
+            document.getElementById('login-form').style.display = 'block';
+            document.getElementById('admin-panel').style.display = 'none';
+            document.getElementById('username').value = '';
+            document.getElementById('password').value = '';
+            loadRecipes();
+            closeModal(); 
+            closeForm();
+            closeDeleteAccountForm();
+        }
+
+        async function loadRecipes() {
+            try {
+                const data = await apiCall('get_recipes');
+                recipes = data.recipes;
+                displayRecipes();
+            } catch (e) {
+                document.getElementById('recipes-container').innerHTML = '<p style="text-align:center;">Ошибка загрузки</p>';
+            }
+        }
+
+        async function searchRecipes() {
+            const query = document.getElementById('search').value.trim();
+            const ingredients = document.getElementById('ingredients').value.trim();
+            const mode = document.getElementById('mode').value;
+            
+            const params = {};
+            if (query) params.query = query;
+            const ingList = ingredients ? ingredients.split(',').map(i => i.trim()).filter(i => i) : [];
+            if (ingList.length) {
+                params.ingredients = ingList;
+                params.mode = mode;
+            }
+            
+            try {
+                const data = await apiCall('search_recipes', params);
+                recipes = data.recipes;
+                displayRecipes();
+            } catch (e) {
+                alert('Ошибка поиска: ' + e.message);
+            }
+        }
+
+        function resetSearch() {
+            document.getElementById('search').value = '';
+            document.getElementById('ingredients').value = '';
+            loadRecipes();
+        }
+
+        function displayRecipes() {
+            const container = document.getElementById('recipes-container');
+            document.getElementById('recipe-count').textContent = recipes.length;
+            
+            if (recipes.length === 0) {
+                container.innerHTML = '<p style="text-align:center;">Рецепты не найдены</p>';
+                return;
+            }
+            
+            container.innerHTML = recipes.map(r => `
+                <div class="recipe" onclick="showRecipe(${r.id})">
+                    <img src="${r.image_url || '/static/rgz/default.jpg'}" class="recipe-image" onerror="this.src='/static/rgz/default.jpg'">
+                    <div class="recipe-content">
+                        <h4 class="recipe-title">${r.title}</h4>
+                        <p><strong>Ингредиенты:</strong> ${r.ingredients.slice(0,3).join(', ')}${r.ingredients.length>3?'...':''}</p>
+                        ${isAdmin ? `
+                            <div style="display:flex;gap:10px;margin-top:10px;">
+                                <button onclick="event.stopPropagation();editRecipe(${r.id})" style="background:#2196F3;color:white;border:none;padding:8px;border-radius:5px;">Ред.</button>
+                                <button onclick="event.stopPropagation();deleteRecipe(${r.id})" style="background:#f44336;color:white;border:none;padding:8px;border-radius:5px;">Уд.</button>
+                            </div>
+                        ` : ''}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function showRecipe(id) {
+            const r = recipes.find(x => x.id === id);
+            if (!r) return;
+            
+            const img = r.image_url && r.image_url.trim() ? r.image_url : '/static/rgz/default.jpg';
+            document.getElementById('recipe-details').innerHTML = `
+                <h2>${r.title}</h2>
+                <img src="${img}" style="width:100%;max-height:300px;object-fit:cover;border-radius:5px;" onerror="this.src='/static/rgz/default.jpg'">
+                <h3>Ингредиенты:</h3><ul>${r.ingredients.map(i=>`<li>${i}</li>`).join('')}</ul>
+                <h3>Шаги:</h3><ol>${r.steps.map(s=>`<li>${s}</li>`).join('')}</ol>
+                ${isAdmin ? `
+                    <div style="text-align:center;margin-top:20px;">
+                        <button onclick="editRecipe(${r.id});closeModal()" style="background:#2196F3;color:white;border:none;padding:10px;border-radius:5px;margin:5px;">Редактировать</button>
+                        <button onclick="deleteRecipe(${r.id});closeModal()" style="background:#f44336;color:white;border:none;padding:10px;border-radius:5px;margin:5px;">Удалить</button>
+                    </div>
+                ` : ''}
+            `;
+            document.getElementById('recipe-modal').style.display = 'block';
+        }
+
+        function showAddForm() {
+            if (!isAdmin) return alert('Требуется авторизация');
+            document.getElementById('form-title').textContent = 'Добавить рецепт';
+            ['recipe-id','recipe-title','recipe-image','recipe-ingredients','recipe-steps'].forEach(id => 
+                document.getElementById(id).value = '');
+            document.getElementById('form-modal').style.display = 'block';
+        }
+
+        function editRecipe(id) {
+            if (!isAdmin) return alert('Требуется авторизация');
+            const r = recipes.find(x => x.id === id);
+            if (!r) return;
+            
+            document.getElementById('form-title').textContent = 'Редактировать рецепт';
+            document.getElementById('recipe-id').value = r.id;
+            document.getElementById('recipe-title').value = r.title;
+            document.getElementById('recipe-image').value = r.image_url || '';
+            document.getElementById('recipe-ingredients').value = r.ingredients.join('\n');
+            document.getElementById('recipe-steps').value = r.steps.join('\n');
+            document.getElementById('form-modal').style.display = 'block';
+        }
+
+        async function saveRecipe() {
+            if (!isAdmin) return alert('Требуется авторизация');
+            
+            const id = document.getElementById('recipe-id').value;
+            const title = document.getElementById('recipe-title').value.trim();
+            const image_url = document.getElementById('recipe-image').value.trim();
+            const ingredients = document.getElementById('recipe-ingredients').value.split('\n').filter(i => i.trim());
+            const steps = document.getElementById('recipe-steps').value.split('\n').filter(s => s.trim());
+            
+            if (!title || !ingredients.length || !steps.length) {
+                return alert('Заполните все поля');
+            }
+            
+            const params = {title, ingredients, steps};
+            if (image_url) params.image_url = image_url;
+            
+            try {
+                if (id) {
+                    params.recipe_id = parseInt(id);
+                    await apiCall('update_recipe', params);
+                    alert('Рецепт обновлен!');
+                } else {
+                    await apiCall('add_recipe', params);
+                    alert('Рецепт добавлен!');
+                }
+                closeForm();
+                loadRecipes();
+            } catch (e) {
+                alert('Ошибка: ' + e.message);
+            }
+        }
+
+        async function deleteRecipe(id) {
+            if (!isAdmin || !confirm('Удалить рецепт?')) return;
+            try {
+                await apiCall('delete_recipe', {recipe_id: id});
+                alert('Рецепт удален!');
+                loadRecipes();
+                closeModal();
+            } catch (e) {
+                alert('Ошибка: ' + e.message);
+            }
+        }
+
+        function showDeleteAccountForm() {
+            document.getElementById('delete-account-modal').style.display = 'block';
+            document.getElementById('confirm-password').value = '';
+        }
+
+        function closeDeleteAccountForm() {
+            document.getElementById('delete-account-modal').style.display = 'none';
+        }
+
+        async function deleteAccount() {
+            const password = document.getElementById('confirm-password').value;
+            
+            if (!password) {
+                alert('Введите пароль для подтверждения');
+                return;
+            }
+            
+            if (!confirm('ВНИМАНИЕ! Вы действительно хотите удалить свой аккаунт администратора? Это действие необратимо.')) {
+                return;
+            }
+            
+            try {
+                await apiCall('delete_account', {password});
+                alert('Аккаунт успешно удален');
+                logout();
+            } catch (e) {
+                alert('Ошибка: ' + e.message);
+                document.getElementById('confirm-password').classList.add('error-input');
+                setTimeout(() => document.getElementById('confirm-password').classList.remove('error-input'), 2000);
+            }
+        }
+
+        function closeModal() { document.getElementById('recipe-modal').style.display = 'none'; }
+        function closeForm() { document.getElementById('form-modal').style.display = 'none'; }
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            loadRecipes();
+            // Автозаглавные буквы
+            ['search','recipe-title'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.addEventListener('input', function() {
+                    const pos = this.selectionStart;
+                    const text = this.value.split(' ').map(w => 
+                        w.trim() ? w[0].toUpperCase() + w.slice(1).toLowerCase() : w
+                    ).join(' ');
+                    if (this.value !== text) {
+                        this.value = text;
+                        this.setSelectionRange(pos, pos);
+                    }
+                });
+            });
+            // Поиск по Enter
+            ['search','ingredients'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.addEventListener('keypress', e => { if (e.key === 'Enter') searchRecipes(); });
+            });
+        });
+    </script>
+</body>
+</html>
