@@ -31,7 +31,7 @@ function getOfficeList() {
             li.className = 'office-item';
             li.innerText = `Офис ${office.number}  ${office.tenant || 'свободен'} - ${office.price} руб.`;
 
-             if (!office.tenant) {
+            if (!office.tenant) {
                 const bookingButton = document.createElement('button');
                 bookingButton.innerText = 'зарезервировать';
                 bookingButton.onclick = function() {booking(office.number)};
