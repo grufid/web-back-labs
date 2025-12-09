@@ -197,7 +197,6 @@ def put_film(id):
 
 @lab7.route('/lab7/rest-api/films/', methods=['POST'])
 def add_film():
-    """Добавление нового фильма"""
     film = request.get_json()
     
     errors = validate_film_data(film)
