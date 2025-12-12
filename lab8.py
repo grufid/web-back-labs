@@ -61,7 +61,7 @@ def login():
 
 @lab8.route('/lab8/articles/')
 def articles_list():
-    search = request.args.get('search', '').strip()
+    query = request.args.get('query', '').strip()
     
     if current_user.is_authenticated:
         my_articles = articles.query.filter_by(login_id=current_user.id).all()
@@ -70,11 +70,11 @@ def articles_list():
             articles.login_id != current_user.id
         ).all()
         
-        if search:
+        if query:
             results = articles.query.filter(
                 or_(
-                    articles.title.ilike(f'%{search}%'),
-                    articles.article_text.ilike(f'%{search}%')
+                    articles.title.ilike(f'%{query}%'),
+                    articles.article_text.ilike(f'%{query}%')
                 ),
                 or_(
                     articles.is_public == True,
@@ -87,16 +87,16 @@ def articles_list():
         return render_template('lab8/articles.html',
             my_articles=my_articles,
             public_articles=other_public,
-            search=search,
+            query=query,
             results=results)
     else:
         public_articles = articles.query.filter_by(is_public=True).all()
         
-        if search:
+        if query:
             results = articles.query.filter(
                 or_(
-                    articles.title.ilike(f'%{search}%'),
-                    articles.article_text.ilike(f'%{search}%')
+                    articles.title.ilike(f'%{query}%'),
+                    articles.article_text.ilike(f'%{query}%')
                 ),
                 articles.is_public == True
             ).all()
@@ -105,7 +105,7 @@ def articles_list():
         
         return render_template('lab8/articles.html',
             public_articles=public_articles,
-            search=search,
+            query=query,
             results=results)
 
 @lab8.route('/lab8/create', methods=['GET', 'POST'])

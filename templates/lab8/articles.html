@@ -9,16 +9,16 @@
 {% endif %}
 
 <form method="GET" action="/lab8/articles/" style="margin-bottom: 20px;">
-    <input type="text" name="search" value="{{ search }}" placeholder="Поиск..." style="padding: 8px; width: 300px; border-radius: 4px;">
+    <input type="text" name="query" value="{{ query }}" placeholder="Поиск..." style="padding: 8px; width: 300px; border-radius: 4px;">
     <button type="submit" style="padding: 8px 15px; background: #1665b9b9; color: rgb(0, 0, 0); border: none; border-radius: 4px;">Искать</button>
-    {% if search %}
+    {% if query %}
     <a href="/lab8/articles/" style="margin-left: 10px; color: #666;">Сбросить поиск</a>
     {% endif %}
 </form>
 
-{% if search %}
+{% if query %}
     {% if results %}
-    <h2>Результаты поиска "{{ search }}":</h2>
+    <h2>Результаты поиска "{{ query }}":</h2>
     {% for article in results %}
     <div style="border: 1px solid #ddd; padding: 15px; margin-bottom: 15px; border-radius: 4px;">
         <h3 style="margin-top: 0;">{{ article.title }}</h3>
@@ -36,7 +36,7 @@
     </div>
     {% endfor %}
     {% else %}
-    <p>Ничего не найдено по запросу "{{ search }}"</p>
+    <p>Ничего не найдено по запросу "{{ query }}"</p>
     {% endif %}
 
 {% else %}
