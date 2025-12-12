@@ -4,6 +4,7 @@ from db import db
 from flask_login import login_user, login_required, current_user, logout_user
 from db.models import users, articles
 from sqlalchemy import or_
+from sqlalchemy import func
 
 lab8 = Blueprint('lab8', __name__)
 
@@ -71,8 +72,11 @@ def articles_list():
         ).all()
         
         if query:
+            search_lower = query.lower()
             results = articles.query.filter(
                 or_(
+                    func.lower(articles.title).like(f"%{search_lower}%"),
+                    func.lower(articles.article_text).like(f"%{search_lower}%"),
                     articles.title.ilike(f'%{query}%'),
                     articles.article_text.ilike(f'%{query}%')
                 ),
@@ -93,8 +97,11 @@ def articles_list():
         public_articles = articles.query.filter_by(is_public=True).all()
         
         if query:
+            search_lower = query.lower()
             results = articles.query.filter(
                 or_(
+                    func.lower(articles.title).like(f"%{search_lower}%"),
+                    func.lower(articles.article_text).like(f"%{search_lower}%"),
                     articles.title.ilike(f'%{query}%'),
                     articles.article_text.ilike(f'%{query}%')
                 ),
