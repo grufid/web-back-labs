@@ -32,27 +32,40 @@
         font-size: 2em;
     }
 </style>
-
     <div class="header">
-        <h1>Flask и БД</h1>
-        <div>Список сделанных страниц:</div>
-    </div>
+    <h1>База знаний</h1>
+    <p>Система управления статьями с авторизацией</p>
+</div>
 
-    <ol class="menu-list">
-        <li>
-            <a class="menu-link" href="/lab8/login">Вход</a>
-        </li>
-        <li>
-            <a class="menu-link" href="/lab8/register">Регистрация</a>
-        </li>
-        <li>
-            <a class="menu-link" href="/lab8/articles">Список статей</a>
-        </li>
-        <li>
-            <a class="menu-link" href="/lab8/create">Создать статью</a>
-        </li>
-        <li>
-            <span>{{ login or 'anonymous' }}</span>
-        </li>
-    </ol>
+<div class="user-status">
+    {% if current_user.is_authenticated %}
+    Вы вошли как: <strong>{{ current_user.login }}</strong>
+    {% else %}
+    Вы не авторизованы
+    {% endif %}
+</div>
+
+<ol class="menu-list">
+    {% if not current_user.is_authenticated %}
+    <li>
+        <a class="menu-link" href="/lab8/login">Вход</a>
+    </li>
+    <li>
+        <a class="menu-link" href="/lab8/register">Регистрация</a>
+    </li>
+    {% endif %}
+    
+    <li>
+        <a class="menu-link" href="/lab8/articles/">Список статей</a>
+    </li>
+    
+    {% if current_user.is_authenticated %}
+    <li>
+        <a class="menu-link" href="/lab8/create">Создать статью</a>
+    </li>
+    <li>
+        <a class="menu-link" href="/lab8/logout">Выход</a>
+    </li>
+    {% endif %}
+</ol>
 {% endblock %}

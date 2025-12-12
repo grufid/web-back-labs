@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block lab %}Лабораторная работа 8 {% endblock %}
+
+{% block main %}
+        <h1>Редактирование статьи</h1>
+
+        {% if error %}
+        <div style="color: rgb(78, 0, 0); background: #ffe6e6; padding: 10px; border-radius: 4px; margin-bottom: 15px;">
+            {{ error }}
+        </div>
+        {% endif %}
+
+        <form method="post">
+            <div style="margin-bottom: 15px;">
+                <label style="display: block; margin-bottom: 5px;">Заголовок:</label>
+                <input type="text" name="title" value="{{ article.title }}" style="width: 95%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;" required maxlength="50">
+            </div>
+            
+            <div style="margin-bottom: 15px;">
+                <label style="display: block; margin-bottom: 5px;">Текст статьи:</label>
+                <textarea name="article_text" style="width: 95%; padding: 8px; border: 1px solid #ccc; border-radius: 4px; height: 300px;" required>{{ article.article_text }}</textarea>
+            </div>
+            
+            <div style="margin-bottom: 15px;">
+                <label style="display: flex; align-items: center; gap: 5px;">
+                    <input type="checkbox" name="is_favorite" {% if article.is_favorite %}checked{% endif %}>
+                    В избранное
+                </label>
+                <label style="display: flex; align-items: center; gap: 5px;">
+                    <input type="checkbox" name="is_public" {% if article.is_public %}checked{% endif %}>
+                    Публичная статья
+                </label>
+            </div>
+            
+            <button type="submit" style="padding: 10px 20px; background: #033870; color: white; border: none; border-radius: 4px; cursor: pointer;">Сохранить</button>
+        </form>
+
+        <div style="margin-top: 20px;">
+            <a href="/lab8/articles/">← Назад к статьям</a>
+        </div>
+{% endblock %}

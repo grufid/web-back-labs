@@ -1,15 +1,77 @@
 {% extends "base.html" %}
-
-{% block lab %}Лабораторная работа 8{% endblock %}
+{% block lab %}Лабораторная работа 8 - Статьи{% endblock %}
 
 {% block main %}
+<h1>Статьи</h1>
 
-    <h1>Статьи</h1>
+{% if current_user.is_authenticated %}
+<a href="/lab8/create" style="display: inline-block; padding: 10px 15px; background: #037b1fce; color: rgb(0, 0, 0); text-decoration: none; border-radius: 4px; margin-bottom: 20px;">+ Создать статью</a>
+{% endif %}
 
+<form method="GET" action="/lab8/articles/" style="margin-bottom: 20px;">
+    <input type="text" name="search" value="{{ search }}" placeholder="Поиск..." style="padding: 8px; width: 300px; border-radius: 4px;">
+    <button type="submit" style="padding: 8px 15px; background: #1665b9b9; color: rgb(0, 0, 0); border: none; border-radius: 4px;">Искать</button>
+    {% if search %}
+    <a href="/lab8/articles/" style="margin-left: 10px; color: #666;">Сбросить поиск</a>
+    {% endif %}
+</form>
 
-    
-    <div style="margin-top: 20px;">
-        <a href="/lab8/">На главную</a>
+{% if search %}
+    {% if results %}
+    <h2>Результаты поиска "{{ search }}":</h2>
+    {% for article in results %}
+    <div style="border: 1px solid #ddd; padding: 15px; margin-bottom: 15px; border-radius: 4px;">
+        <h3 style="margin-top: 0;">{{ article.title }}</h3>
+        <div style="color: #666; margin-bottom: 10px;">
+            {% if current_user.is_authenticated and article.login_id == current_user.id and article.is_favorite %}★ {% endif %}
+            {% if article.is_public %}Публичная{% else %}Приватная{% endif %}
+        </div>
+        <p>{{ article.article_text[:200] }}{% if article.article_text|length > 200 %}...{% endif %}</p>
+        {% if current_user.is_authenticated and article.login_id == current_user.id %}
+        <div style="margin-top: 10px;">
+            <a href="/lab8/edit/{{ article.id }}" style="padding: 5px 10px; background: #bf6109; color: black; text-decoration: none; border-radius: 3px; margin-right: 10px;">Редактировать</a>
+            <a href="/lab8/delete/{{ article.id }}" style="padding: 5px 10px; background: #86000d; color: rgb(0, 0, 0); text-decoration: none; border-radius: 3px;" onclick="return confirm('Удалить?')">Удалить</a>
+        </div>
+        {% endif %}
     </div>
+    {% endfor %}
+    {% else %}
+    <p>Ничего не найдено по запросу "{{ search }}"</p>
+    {% endif %}
 
+{% else %}
+    {% if current_user.is_authenticated and my_articles %}
+    <h2>Мои статьи</h2>
+    {% for article in my_articles %}
+    <div style="border: 1px solid #ddd; padding: 15px; margin-bottom: 15px; border-radius: 4px;">
+        <h3 style="margin-top: 0;">{{ article.title }}</h3>
+        <div style="color: #666; margin-bottom: 10px;">
+            {% if article.is_favorite %}★ {% endif %}
+            {% if article.is_public %}Публичная{% else %}Приватная{% endif %}
+        </div>
+        <p>{{ article.article_text[:200] }}{% if article.article_text|length > 200 %}...{% endif %}</p>
+        <div style="margin-top: 10px;">
+            <a href="/lab8/edit/{{ article.id }}" style="padding: 5px 10px; background: #b66604; color: black; text-decoration: none; border-radius: 3px; margin-right: 10px;">Редактировать</a>
+            <a href="/lab8/delete/{{ article.id }}" style="padding: 5px 10px; background: #9c0010; color: rgb(0, 0, 0); text-decoration: none; border-radius: 3px;" onclick="return confirm('Удалить?')">Удалить</a>
+        </div>
+    </div>
+    {% endfor %}
+    {% elif current_user.is_authenticated and not my_articles %}
+    <p>У вас пока нет статей. <a href="/lab8/create">Создайте первую!</a></p>
+    {% endif %}
+
+    {% if public_articles %}
+    <h2>{% if current_user.is_authenticated %}Публичные статьи других{% else %}Публичные статьи{% endif %}</h2>
+    {% for article in public_articles %}
+    <div style="border: 1px solid #ddd; padding: 15px; margin-bottom: 15px; border-radius: 4px;">
+        <h3 style="margin-top: 0;">{{ article.title }}</h3>
+        <p>{{ article.article_text[:300] }}{% if article.article_text|length > 300 %}...{% endif %}</p>
+    </div>
+    {% endfor %}
+    {% endif %}
+{% endif %}
+
+<div style="margin-top: 20px;">
+    <a href="/lab8/">На главную</a>
+</div>
 {% endblock %}
