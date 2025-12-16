@@ -72,10 +72,11 @@ def articles_list():
         ).all()
         
         if query:
+            query_lower = query.lower()
             results = articles.query.filter(
                 or_(
-                    articles.title.collate('NOCASE').like(f'%{query}%'),
-                    articles.article_text.collate('NOCASE').like(f'%{query}%')
+                    func.lower(articles.title).like(f'%{query_lower}%'),
+                    func.lower(articles.article_text).like(f'%{query_lower}%')
                 ),
                 or_(
                     articles.is_public == True,
@@ -94,10 +95,11 @@ def articles_list():
         public_articles = articles.query.filter_by(is_public=True).all()
         
         if query:
+            query_lower = query.lower()
             results = articles.query.filter(
                 or_(
-                    articles.title.collate('NOCASE').like(f'%{query}%'),
-                    articles.article_text.collate('NOCASE').like(f'%{query}%')
+                    func.lower(articles.title).like(f'%{query_lower}%'),
+                    func.lower(articles.article_text).like(f'%{query_lower}%')
                 ),
                 articles.is_public == True
             ).all()
@@ -108,6 +110,7 @@ def articles_list():
             public_articles=public_articles,
             query=query,
             results=results)
+    
 
 @lab8.route('/lab8/create', methods=['GET', 'POST'])
 @login_required
