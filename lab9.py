@@ -5,10 +5,10 @@ import random
 lab9 = Blueprint('lab9', __name__)
 
 BOX_COUNT = 10
-BOX_SIZE = 120  # размер коробки в px
-VIP_BOXES = {8, 9, 10}  # VIP-подарки
+BOX_SIZE = 120  
+VIP_BOXES = {8, 9, 10}  
 
-# Состояние коробок
+
 boxes = {
     i: {
         "opened": False,
