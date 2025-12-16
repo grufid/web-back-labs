@@ -72,11 +72,12 @@ def articles_list():
         ).all()
         
         if query:
-            search_lower = f"%{query}%"
+            # Явное приведение к нижнему регистру для гарантированной регистронезависимости
+            query_lower = query.lower()
             results = articles.query.filter(
                 or_(
-                    articles.title.ilike(search_lower),
-                    articles.article_text.ilike(search_lower)
+                    func.lower(articles.title).contains(query_lower),
+                    func.lower(articles.article_text).contains(query_lower)
                 ),
                 or_(
                     articles.is_public == True,
@@ -85,7 +86,6 @@ def articles_list():
             ).all()
         else:
             results = []
-
         
         return render_template('lab8/articles.html',
             my_articles=my_articles,
@@ -96,11 +96,12 @@ def articles_list():
         public_articles = articles.query.filter_by(is_public=True).all()
         
         if query:
-            search_lower = f"%{query}%"
+            # То же самое для неавторизованных пользователей
+            query_lower = query.lower()
             results = articles.query.filter(
                 or_(
-                    articles.title.ilike(f'%{query}%'),
-                    articles.article_text.ilike(f'%{query}%')
+                    func.lower(articles.title).contains(query_lower),
+                    func.lower(articles.article_text).contains(query_lower)
                 ),
                 articles.is_public == True
             ).all()
