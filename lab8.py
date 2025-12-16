@@ -72,12 +72,10 @@ def articles_list():
         ).all()
         
         if query:
-            # Явное приведение к нижнему регистру для гарантированной регистронезависимости
-            query_lower = query.lower()
             results = articles.query.filter(
                 or_(
-                    func.lower(articles.title).contains(query_lower),
-                    func.lower(articles.article_text).contains(query_lower)
+                    articles.title.collate('NOCASE').like(f'%{query}%'),
+                    articles.article_text.collate('NOCASE').like(f'%{query}%')
                 ),
                 or_(
                     articles.is_public == True,
@@ -96,12 +94,10 @@ def articles_list():
         public_articles = articles.query.filter_by(is_public=True).all()
         
         if query:
-            # То же самое для неавторизованных пользователей
-            query_lower = query.lower()
             results = articles.query.filter(
                 or_(
-                    func.lower(articles.title).contains(query_lower),
-                    func.lower(articles.article_text).contains(query_lower)
+                    articles.title.collate('NOCASE').like(f'%{query}%'),
+                    articles.article_text.collate('NOCASE').like(f'%{query}%')
                 ),
                 articles.is_public == True
             ).all()
