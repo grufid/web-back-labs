@@ -83,7 +83,7 @@ function openBox(id) {
         document.getElementById('box' + id).style.opacity = '0.3';
         document.getElementById('modal-content').innerHTML =
             `<p>${data.text}</p>
-             <img src="/static/${data.gift}" width="600">`;
+             <img src="/static/${data.gift}" width="500">`;
         document.getElementById('modal').style.display = 'block';
         document.getElementById('count').innerText = data.opened_left;
     });

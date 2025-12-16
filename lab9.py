@@ -6,6 +6,8 @@ lab9 = Blueprint('lab9', __name__)
 
 BOX_COUNT = 10
 BOX_SIZE = 120  # размер коробки в px
+SCREEN_WIDTH = 1200  # ширина контейнера
+SCREEN_HEIGHT = 500  # высота контейнера
 VIP_BOXES = {8, 9, 10}  # VIP-подарки
 
 # Состояние коробок
