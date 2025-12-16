@@ -6,8 +6,6 @@ lab9 = Blueprint('lab9', __name__)
 
 BOX_COUNT = 10
 BOX_SIZE = 120  # размер коробки в px
-SCREEN_WIDTH = 1200  # ширина контейнера
-SCREEN_HEIGHT = 500  # высота контейнера
 VIP_BOXES = {8, 9, 10}  # VIP-подарки
 
 # Состояние коробок
@@ -33,7 +31,7 @@ def generate_positions():
     positions = {}
     for i in range(1, BOX_COUNT + 1):
         while True:
-            pos = {"top": random.randint(50, 500), "left": random.randint(50, 1200 - BOX_SIZE)}
+            pos = {"top": random.randint(80, 600 - BOX_SIZE), "left": random.randint(90, 1200 - BOX_SIZE)}
             if all(not intersects(pos, positions[j]) for j in positions):
                 positions[i] = pos
                 break
