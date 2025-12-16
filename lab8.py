@@ -65,24 +65,27 @@ def articles_list():
     query = request.args.get('query', '').strip()
     
     if current_user.is_authenticated:
-        my_articles = articles.query.filter_by(login_id=current_user.id).all()
-        other_public = articles.query.filter(
-            articles.is_public == True,
-            articles.login_id != current_user.id
+        all_available = articles.query.filter(
+            or_(
+                articles.is_public == True,
+                articles.login_id == current_user.id
+            )
         ).all()
         
+        my_articles = [a for a in all_available if a.login_id == current_user.id]
+        other_public = [a for a in all_available if a.is_public and a.login_id != current_user.id]
+        
         if query:
+
             query_lower = query.lower()
-            results = articles.query.filter(
-                or_(
-                    func.lower(articles.title).like(f'%{query_lower}%'),
-                    func.lower(articles.article_text).like(f'%{query_lower}%')
-                ),
-                or_(
-                    articles.is_public == True,
-                    articles.login_id == current_user.id
-                )
-            ).all()
+            results = []
+            
+            for article in all_available:
+                title_lower = article.title.lower() if article.title else ""
+                text_lower = article.article_text.lower() if article.article_text else ""
+                
+                if query_lower in title_lower or query_lower in text_lower:
+                    results.append(article)
         else:
             results = []
         
@@ -92,22 +95,23 @@ def articles_list():
             query=query,
             results=results)
     else:
-        public_articles = articles.query.filter_by(is_public=True).all()
+        all_public = articles.query.filter_by(is_public=True).all()
         
         if query:
             query_lower = query.lower()
-            results = articles.query.filter(
-                or_(
-                    func.lower(articles.title).like(f'%{query_lower}%'),
-                    func.lower(articles.article_text).like(f'%{query_lower}%')
-                ),
-                articles.is_public == True
-            ).all()
+            results = []
+            
+            for article in all_public:
+                title_lower = article.title.lower() if article.title else ""
+                text_lower = article.article_text.lower() if article.article_text else ""
+                
+                if query_lower in title_lower or query_lower in text_lower:
+                    results.append(article)
         else:
             results = []
         
         return render_template('lab8/articles.html',
-            public_articles=public_articles,
+            public_articles=all_public,
             query=query,
             results=results)
     
