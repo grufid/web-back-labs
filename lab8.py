@@ -72,13 +72,11 @@ def articles_list():
         ).all()
         
         if query:
-            search_lower = query.lower()
+            search_lower = f"%{query}%"
             results = articles.query.filter(
                 or_(
-                    func.lower(articles.title).like(f"%{search_lower}%"),
-                    func.lower(articles.article_text).like(f"%{search_lower}%"),
-                    articles.title.ilike(f'%{query}%'),
-                    articles.article_text.ilike(f'%{query}%')
+                    articles.title.ilike(search_lower),
+                    articles.article_text.ilike(search_lower)
                 ),
                 or_(
                     articles.is_public == True,
@@ -87,6 +85,7 @@ def articles_list():
             ).all()
         else:
             results = []
+
         
         return render_template('lab8/articles.html',
             my_articles=my_articles,
@@ -97,11 +96,9 @@ def articles_list():
         public_articles = articles.query.filter_by(is_public=True).all()
         
         if query:
-            search_lower = query.lower()
+            search_lower = f"%{query}%"
             results = articles.query.filter(
                 or_(
-                    func.lower(articles.title).like(f"%{search_lower}%"),
-                    func.lower(articles.article_text).like(f"%{search_lower}%"),
                     articles.title.ilike(f'%{query}%'),
                     articles.article_text.ilike(f'%{query}%')
                 ),
