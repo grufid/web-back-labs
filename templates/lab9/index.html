@@ -3,6 +3,48 @@
 {% block lab %}Лабораторная работа 9{% endblock %}
 
 {% block main %}
+<style>
+    h2 {
+        text-align: center;
+        color: #8a0f0f;
+        font-size: 45px;
+        margin-bottom: 20px;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+    }
+    .santa-button {
+        background: linear-gradient(135deg, #580a05, #d32f2f);
+        color: white;
+        padding: 12px 25px;
+        border: none;
+        border-radius: 25px;
+        font-size: 18px;
+        font-weight: bold;
+        cursor: pointer;
+        margin: 15px 0;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .santa-button:hover {
+        background: linear-gradient(135deg, #0e2508, #04741e);
+        transform: scale(1.05);
+        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
+    }
+    .gifts-container {
+        position: relative;
+        height: 500px;
+        background: linear-gradient(180deg, #e3f2fd, #bbdefb);
+        border-radius: 20px;
+        padding: 20px;
+        margin-top: 20px;
+        border: 5px solid #ff9800;
+        box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+    }
+</style>
 <h2> Новогодние подарки </h2>
 
 <p>Неоткрытых коробок: <span id="count">{{ unopened_count }}</span></p>
@@ -24,10 +66,10 @@
 {% endif %}
 
 {% if current_user.is_authenticated %}
-<button onclick="resetBoxes()"> Дед Мороз</button>
+<button class="santa-button" onclick="resetBoxes()"> Дед Мороз</button>
 {% endif %}
 
-<div style="position: relative; height: 400px;">
+<div style="position: relative; height: 600px;">
     {% for id, box in boxes.items() %}
         <img
             src="/static/{{ box.box }}"
