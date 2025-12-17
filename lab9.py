@@ -42,7 +42,7 @@ def generate_positions():
     positions = {}
     for i in range(1, BOX_COUNT + 1):
         while True:
-            pos = {"top": random.randint(80, 600 - BOX_SIZE), "left": random.randint(90, 1200 - BOX_SIZE)}
+            pos = {"top": random.randint(40, 500 - BOX_SIZE), "left": random.randint(50, 2000 - BOX_SIZE)}
             if all(not intersects(pos, positions[j]) for j in positions):
                 positions[i] = pos
                 break
